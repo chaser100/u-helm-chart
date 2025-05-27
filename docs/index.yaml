@@ -3,9 +3,9 @@ entries:
   application:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2025-05-27T08:57:33.300850717+03:00"
+    created: "2025-05-27T09:21:29.448239675+03:00"
     description: A Helm chart for Kubernetes
-    digest: f400886d63efa765c2d792787c01593d192f4250cca6617167eded29c7b58dcd
+    digest: 80bbc6d728da0ef66764885f23b73702a4dabeb2a690311c87d88e6f4cf0951d
     keywords:
     - Universal Helm chart
     maintainers:
@@ -14,6 +14,6 @@ entries:
     name: application
     type: application
     urls:
-    - https://chaser100.github.io/u-helm-chart/docs/application-0.1.0.tgz
+    - https://chaser100.github.io/u-helm-chart/application-0.1.0.tgz
     version: 0.1.0
-generated: "2025-05-27T08:57:33.298859574+03:00"
+generated: "2025-05-27T09:21:29.447595722+03:00"
