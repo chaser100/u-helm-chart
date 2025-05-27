@@ -1,0 +1,231 @@
+---
+replicaCount: 1
+
+imagePullPolicy: Always
+
+image: "nginx"
+
+imageTag: "latest"
+
+imagePullSecrets: []
+#  - name: imagepullsecret1
+#  - name: imagepullsecret2
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+#   capabilities:
+#     drop:
+#     - ALL
+#   readOnlyRootFilesystem: true
+#   runAsNonRoot: true
+#   runAsUser: 1000
+
+service:
+  name: http
+  type: ClusterIP
+  port: 80
+  protocol: TCP
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+extra:
+  ingress:
+    enabled: true
+    className: ""
+    annotations: {}
+    hosts:
+      - host: extra.chart-example.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+    #  - secretName: extra.chart-example-tls
+    #    hosts:
+    #      - extra.chart-example.local
+
+job:
+  enabled: false
+  name: my-job
+  image: busybox
+  imageTag: latest
+  imagePullPolicy: IfNotPresent
+  restartPolicy: OnFailure
+  backoffLimit: 2
+  command: ["/bin/sh", "-c"]
+  args: ["echo 'Hello from job'; sleep 10"]
+  envFromSecrets:
+    - name: JOB_TOKEN
+      secretName: example-external-secret
+      secretKey: JOB_TOKEN
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+cronjob:
+  enabled: true
+  name: my-cronjob
+  image: busybox
+  imageTag: latest
+  imagePullPolicy: IfNotPresent
+  schedule: "*/5 * * * *"
+  restartPolicy: OnFailure
+  backoffLimit: 1
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 1
+  command: ["/bin/sh", "-c"]
+  args: ["date >> /etc/cronlog/output.txt"]
+  envFromSecrets:
+    - name: API_KEY
+      secretName: my-secret
+      secretKey: API_KEY
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+livenessProbe: {}
+#  httpGet:
+#    path: /
+#    port: http
+readinessProbe: {}
+#  httpGet:
+#    path: /
+#    port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+configMaps: {}
+#  - name: my-config
+#    mountPath: /etc/my-config
+#    readOnly: true
+#    defaultMode: 0440
+#    data:
+#      app.conf: |
+#        debug = true
+#
+#  - name: partial-config
+#    mountPath: /etc/partial
+#    subPath: app.conf
+#    readOnly: false
+#    items:
+#      - key: app.conf
+#        path: config-file
+#    data:
+#      app.conf: |
+#        key=value
+
+volumes: {}
+#  - name: custom-secret
+#    secret:
+#      secretName: mysecret
+#      optional: false
+
+volumeMounts: {}
+#  - name: custom-secret
+#    mountPath: "/etc/custom-secret"
+#    readOnly: true
+
+nodeSelector: []
+#  node-role.kubernetes.io/app: ""
+
+tolerations: {}
+#  - key: "node-role.kubernetes.io/app"
+#    operator: "Exists"
+#    effect: "NoSchedule"
+
+affinity: {}
+
+extraContainers: {}
+#  enabled: true
+#  containers:
+#    - name: sidecar
+#      image: busybox
+#      command: [ "sleep", "3600" ]
+#      envFromSecrets:
+#        - name: BAR
+#          secretName: example-external-secret
+#          secretKey: BAR
+#      volumeMounts:
+#        - name: my-config
+#          mountPath: /mnt/config
+
+envFromSecrets: {}
+#  - name: FOO
+#    secretName: example-external-secret
+#    secretKey: FOO
+#
+#  - name: BAR
+#    secretName: example-external-secret
+#    secretKey: BAR
+
+extraManifests: {}
+#  - apiVersion: external-secrets.io/v1beta1
+#    kind: ExternalSecret
+#    metadata:
+#      name: example-external-secret
+#      namespace: example
+#    spec:
+#      refreshInterval: 10s
+#      secretStoreRef:
+#        name: vault-cluster-backend
+#        kind: ClusterSecretStore
+#      target:
+#        name: example-external-secret
+#        template:
+#          type: Opaque
+#      data:
+#        - secretKey: FOO
+#          remoteRef:
+#            key: path/keys
+#            property: FOO
+#        - secretKey: BAR
+#          remoteRef:
+#            key: path/keys
+#            property: BAR

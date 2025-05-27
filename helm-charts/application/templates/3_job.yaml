@@ -1,0 +1,108 @@
+{{- if .Values.job.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "application.fullname" . }}-job
+  labels:
+    {{- include "application.labels" . | nindent 4 }}
+spec:
+  backoffLimit: {{ .Values.job.backoffLimit | default 1 }}
+  template:
+    metadata:
+      labels:
+        {{- include "application.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: {{ .Values.job.restartPolicy | default "OnFailure" }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "application.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Values.job.name | default "job-runner" }}
+          image: {{ .Values.job.image | default .Values.image }}:{{ .Values.job.imageTag | default .Values.imageTag }}
+          imagePullPolicy: {{ .Values.job.imagePullPolicy | default "IfNotPresent" }}
+          {{- if .Values.job.command }}
+          command: {{ toYaml .Values.job.command | nindent 12 }}
+          {{- end }}
+          {{- if .Values.job.args }}
+          args: {{ toYaml .Values.job.args | nindent 12 }}
+          {{- end }}
+          {{- with .Values.job.envFromSecrets }}
+          env:
+            {{- range . }}
+            - name: {{ .name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .secretName }}
+                  key: {{ .secretKey }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.job.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- $mounts := list }}
+          {{- with .Values.volumeMounts }}
+            {{- $mounts = append $mounts . }}
+          {{- end }}
+          {{- range .Values.configMaps }}
+          {{- if .mountPath }}
+            {{- $mounts = append $mounts (dict "name" .name "mountPath" .mountPath "subPath" .subPath "readOnly" (default true .readOnly)) }}
+          {{- end }}
+          {{- end }}
+          {{- if $mounts }}
+          volumeMounts:
+            {{- range $mount := $mounts }}
+            - name: {{ $mount.name }}
+              mountPath: {{ $mount.mountPath }}
+              {{- if $mount.subPath }}
+              subPath: {{ $mount.subPath }}
+              {{- end }}
+              readOnly: {{ $mount.readOnly }}
+            {{- end }}
+          {{- end }}
+      {{- $vols := list }}
+      {{- with .Values.volumes }}
+        {{- $vols = append $vols . }}
+      {{- end }}
+      {{- range .Values.configMaps }}
+      {{- if .mountPath }}
+        {{- $vols = append $vols (dict "name" .name "configMap" (dict "name" .name "items" .items "defaultMode" .defaultMode)) }}
+      {{- end }}
+      {{- end }}
+      {{- if $vols }}
+      volumes:
+        {{- range $vol := $vols }}
+        - name: {{ $vol.name }}
+          {{- if $vol.secret }}
+          secret:
+            {{- toYaml $vol.secret | nindent 12 }}
+          {{- else if $vol.configMap }}
+          configMap:
+            name: {{ $vol.configMap.name }}
+            {{- if $vol.configMap.items }}
+            items:
+              {{- toYaml $vol.configMap.items | nindent 14 }}
+            {{- end }}
+            {{- if $vol.configMap.defaultMode }}
+            defaultMode: {{ $vol.configMap.defaultMode }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

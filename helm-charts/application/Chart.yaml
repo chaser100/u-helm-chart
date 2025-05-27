@@ -1,0 +1,15 @@
+apiVersion: v2
+name: application
+description: A Helm chart for Kubernetes
+keywords:
+  - Universal Helm chart
+
+type: application
+
+version: 0.1.0
+
+appVersion: "0.1.0"
+
+maintainers:
+  - name: Viacheslav Lochashvili
+    email: The maintainers email (optional for each maintainer)
