@@ -1,5 +1,16 @@
 # u-helm-chart
 
+# Установка Helm-чарта `application`
+
+Этот чарт публикуется через GitHub Pages и может быть использован как внешний Helm-репозиторий.
+
+```bash
+helm repo add uni-chart https://chaser100.github.io/u-helm-chart
+helm repo update
+helm install my-release uni-chart/application
+helm install my-release uni-chart/application -f my-values.yaml
+```
+
 # Helm Chart Values Documentation
 
 ## Deployment
