@@ -3,7 +3,7 @@ entries:
   application:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2025-05-27T09:21:29.448239675+03:00"
+    created: "2025-05-28T07:51:38.320958694+03:00"
     description: A Helm chart for Kubernetes
     digest: 80bbc6d728da0ef66764885f23b73702a4dabeb2a690311c87d88e6f4cf0951d
     keywords:
@@ -16,4 +16,4 @@ entries:
     urls:
     - https://chaser100.github.io/u-helm-chart/application-0.1.0.tgz
     version: 0.1.0
-generated: "2025-05-27T09:21:29.447595722+03:00"
+generated: "2025-05-28T07:51:38.32020731+03:00"

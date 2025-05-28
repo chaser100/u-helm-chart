@@ -92,7 +92,7 @@ job:
       memory: 256Mi
 
 cronjob:
-  enabled: true
+  enabled: false
   name: my-cronjob
   image: busybox
   imageTag: latest
