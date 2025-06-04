@@ -5,12 +5,12 @@ metadata:
   name: {{ include "application.fullname" . }}-extra
   labels:
     {{- include "application.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
+  {{- with .Values.extra.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- with .Values.ingress.className }}
+  {{- with .Values.extra.ingress.className }}
   ingressClassName: {{ . }}
   {{- end }}
   {{- if .Values.extra.ingress.tls }}
