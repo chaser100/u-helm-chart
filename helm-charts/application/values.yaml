@@ -200,7 +200,7 @@ extraContainers: {}
 #          mountPath: /mnt/config
 
 envFromSecrets:
-  enableEnvFrom: true
+  enableEnvFrom: false
   secretName: example-external-secret
 
 envSecrets:
