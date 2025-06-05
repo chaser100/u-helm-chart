@@ -196,14 +196,19 @@ extraContainers: {}
 #        - name: my-config
 #          mountPath: /mnt/config
 
-envFromSecrets: {}
-#  - name: FOO
-#    secretName: example-external-secret
-#    secretKey: FOO
-#
-#  - name: BAR
-#    secretName: example-external-secret
-#    secretKey: BAR
+envFromSecrets:
+  enableEnvFrom: false
+  secretName: example-external-secret
+
+envSecrets:
+  enableEnv: false
+  envs:
+    - name: FOO
+      secretName: example-external-secret
+      secretKey: FOO
+    - name: BAR
+      secretName: example-external-secret
+      secretKey: BAR
 
 extraManifests: {}
 #  - apiVersion: external-secrets.io/v1beta1

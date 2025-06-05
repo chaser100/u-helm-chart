@@ -36,15 +36,20 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ .Values.image }}:{{ .Values.imageTag }}
           imagePullPolicy: {{ .Values.imagePullPolicy | default "Always" }}
-          {{- with .Values.envFromSecrets }}
+          {{- if .Values.envSecrets.enableEnv }}
           env:
-            {{- range . }}
+            {{- range .Values.envSecrets.envs }}
             - name: {{ .name }}
               valueFrom:
                 secretKeyRef:
                   name: {{ .secretName }}
                   key: {{ .secretKey }}
             {{- end }}
+          {{- end }}
+          {{- if .Values.envFromSecrets.enableEnvFrom }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.envFromSecrets.secretName }}
           {{- end }}
           ports:
             - name: {{ .Values.service.name }}
@@ -59,7 +64,6 @@ spec:
           {{- if .Values.livenessProbe }}
           livenessProbe: {{- toYaml .Values.livenessProbe | trim | nindent 12 }}
           {{- end }}
-
           {{- $mounts := list }}
           {{- with .Values.volumeMounts }}
             {{- $mounts = append $mounts . }}
@@ -80,7 +84,6 @@ spec:
               readOnly: {{ $mount.readOnly }}
             {{- end }}
           {{- end }}
-
       {{- with .Values.extraContainers }}
       {{- if and .enabled .containers }}
       {{- range .containers }}
@@ -103,15 +106,20 @@ spec:
           resources:
             {{- toYaml .resources | nindent 12 }}
           {{- end }}
-          {{- if .envFromSecrets }}
+          {{- if .Values.envSecrets.enableEnv }}
           env:
-            {{- range .envFromSecrets }}
+            {{- range .Values.envSecrets.envs }}
             - name: {{ .name }}
               valueFrom:
                 secretKeyRef:
                   name: {{ .secretName }}
                   key: {{ .secretKey }}
             {{- end }}
+          {{- end }}
+          {{- if .Values.envFromSecrets.enableEnvFrom }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.envFromSecrets.secretName }}
           {{- end }}
           {{- if .volumeMounts }}
           volumeMounts:
@@ -120,7 +128,6 @@ spec:
       {{- end }}
       {{- end }}
       {{- end }}
-
       {{- $vols := list }}
       {{- with .Values.volumes }}
         {{- $vols = append $vols . }}
@@ -150,7 +157,6 @@ spec:
           {{- end }}
         {{- end }}
       {{- end }}
-
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
