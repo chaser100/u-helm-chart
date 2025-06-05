@@ -20,6 +20,9 @@ serviceAccount:
   annotations: {}
   name: ""
 
+deploymentAnnotations: []
+#  prometheus.io/scrape: "true"
+
 podAnnotations: {}
 
 podLabels: {}
@@ -197,7 +200,7 @@ extraContainers: {}
 #          mountPath: /mnt/config
 
 envFromSecrets:
-  enableEnvFrom: false
+  enableEnvFrom: true
   secretName: example-external-secret
 
 envSecrets:
