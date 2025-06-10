@@ -69,13 +69,13 @@ spec:
           livenessProbe: {{- toYaml .Values.livenessProbe | trim | nindent 12 }}
           {{- end }}
           {{- $mounts := list }}
-          {{- with .Values.volumeMounts }}
+          {{- range .Values.volumeMounts }}
             {{- $mounts = append $mounts . }}
           {{- end }}
           {{- range .Values.configMaps }}
-          {{- if .mountPath }}
-            {{- $mounts = append $mounts (dict "name" .name "mountPath" .mountPath "subPath" .subPath "readOnly" (default true .readOnly)) }}
-          {{- end }}
+            {{- if .mountPath }}
+              {{- $mounts = append $mounts (dict "name" .name "mountPath" .mountPath "subPath" .subPath "readOnly" (default true .readOnly)) }}
+            {{- end }}
           {{- end }}
           {{- if $mounts }}
           volumeMounts:
@@ -133,13 +133,13 @@ spec:
       {{- end }}
       {{- end }}
       {{- $vols := list }}
-      {{- with .Values.volumes }}
+      {{- range .Values.volumes }}
         {{- $vols = append $vols . }}
       {{- end }}
       {{- range .Values.configMaps }}
-      {{- if .mountPath }}
-        {{- $vols = append $vols (dict "name" .name "configMap" (dict "name" .name "items" .items "defaultMode" .defaultMode)) }}
-      {{- end }}
+        {{- if .mountPath }}
+          {{- $vols = append $vols (dict "name" .name "configMap" (dict "name" .name "items" .items "defaultMode" .defaultMode)) }}
+        {{- end }}
       {{- end }}
       {{- if $vols }}
       volumes:
@@ -158,6 +158,12 @@ spec:
             {{- if $vol.configMap.defaultMode }}
             defaultMode: {{ $vol.configMap.defaultMode }}
             {{- end }}
+          {{- else if $vol.hostPath }}
+          hostPath:
+            {{- toYaml $vol.hostPath | nindent 12 }}
+          {{- else if $vol.emptyDir }}
+          emptyDir:
+            {{- toYaml $vol.emptyDir | nindent 12 }}
           {{- end }}
         {{- end }}
       {{- end }}
@@ -173,3 +179,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
