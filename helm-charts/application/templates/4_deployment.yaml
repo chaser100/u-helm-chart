@@ -110,6 +110,15 @@ spec:
           resources:
             {{- toYaml .resources | nindent 12 }}
           {{- end }}
+          {{- if .startupProbe }}
+          startupProbe: {{- toYaml .startupProbe | nindent 6 }}
+          {{- end }}
+          {{- if .readinessProbe }}
+          readinessProbe: {{- toYaml .readinessProbe | nindent 6 }}
+          {{- end }}
+          {{- if .livenessProbe }}
+          livenessProbe: {{- toYaml .livenessProbe | nindent 6 }}
+          {{- end }}
           {{- if and $.Values.envSecrets $.Values.envSecrets.enableEnv }}
           env:
             {{- range $.Values.envSecrets.envs }}
