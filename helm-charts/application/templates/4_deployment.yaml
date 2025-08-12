@@ -40,7 +40,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ .Values.image }}:{{ .Values.imageTag }}
           imagePullPolicy: {{ .Values.imagePullPolicy | default "Always" }}
-          {{- if .Values.envSecrets.enableEnv }}
+          {{- if and .Values.envSecrets .Values.envSecrets.enableEnv }}
           env:
             {{- range .Values.envSecrets.envs }}
             - name: {{ .name }}
@@ -50,7 +50,7 @@ spec:
                   key: {{ .secretKey }}
             {{- end }}
           {{- end }}
-          {{- if .Values.envFromSecrets.enableEnvFrom }}
+          {{- if and .Values.envFromSecrets .Values.envFromSecrets.enableEnvFrom }}
           envFrom:
             - secretRef:
                 name: {{ .Values.envFromSecrets.secretName }}
@@ -110,9 +110,9 @@ spec:
           resources:
             {{- toYaml .resources | nindent 12 }}
           {{- end }}
-          {{- if .Values.envSecrets.enableEnv }}
+          {{- if and $.Values.envSecrets $.Values.envSecrets.enableEnv }}
           env:
-            {{- range .Values.envSecrets.envs }}
+            {{- range $.Values.envSecrets.envs }}
             - name: {{ .name }}
               valueFrom:
                 secretKeyRef:
@@ -120,10 +120,10 @@ spec:
                   key: {{ .secretKey }}
             {{- end }}
           {{- end }}
-          {{- if .Values.envFromSecrets.enableEnvFrom }}
+          {{- if and $.Values.envFromSecrets $.Values.envFromSecrets.enableEnvFrom }}
           envFrom:
             - secretRef:
-                name: {{ .Values.envFromSecrets.secretName }}
+                name: {{ $.Values.envFromSecrets.secretName }}
           {{- end }}
           {{- if .volumeMounts }}
           volumeMounts:
@@ -179,4 +179,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-

@@ -6,9 +6,9 @@ keywords:
 
 type: application
 
-version: 0.1.0
+version: 0.1.5
 
-appVersion: "0.1.0"
+appVersion: "0.1.5"
 
 maintainers:
   - name: Viacheslav Lochashvili
