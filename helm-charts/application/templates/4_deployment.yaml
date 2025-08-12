@@ -60,13 +60,16 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: {{ .Values.service.protocol }}
           {{- if .Values.startupProbe }}
-          startupProbe: {{- toYaml .Values.startupProbe | trim | nindent 12 }}
+          startupProbe:
+            {{- toYaml .Values.startupProbe | trim | nindent 12 }}
           {{- end }}
           {{- if .Values.readinessProbe }}
-          readinessProbe: {{- toYaml .Values.readinessProbe | trim | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | trim | nindent 12 }}
           {{- end }}
           {{- if .Values.livenessProbe }}
-          livenessProbe: {{- toYaml .Values.livenessProbe | trim | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | trim | nindent 12 }}
           {{- end }}
           {{- $mounts := list }}
           {{- range .Values.volumeMounts }}
@@ -97,10 +100,12 @@ spec:
           imagePullPolicy: {{ .imagePullPolicy }}
           {{- end }}
           {{- if .command }}
-          command: {{ toYaml .command | nindent 10 }}
+          command:
+            {{- toYaml .command | nindent 12 }}
           {{- end }}
           {{- if .args }}
-          args: {{ toYaml .args | nindent 10 }}
+          args:
+            {{- toYaml .args | nindent 12 }}
           {{- end }}
           {{- if .ports }}
           ports:
@@ -111,13 +116,16 @@ spec:
             {{- toYaml .resources | nindent 12 }}
           {{- end }}
           {{- if .startupProbe }}
-          startupProbe: {{- toYaml .startupProbe | nindent 6 }}
+          startupProbe:
+            {{- toYaml .startupProbe | nindent 12 }}
           {{- end }}
           {{- if .readinessProbe }}
-          readinessProbe: {{- toYaml .readinessProbe | nindent 6 }}
+          readinessProbe:
+            {{- toYaml .readinessProbe | nindent 12 }}
           {{- end }}
           {{- if .livenessProbe }}
-          livenessProbe: {{- toYaml .livenessProbe | nindent 6 }}
+          livenessProbe:
+            {{- toYaml .livenessProbe | nindent 12 }}
           {{- end }}
           {{- if and $.Values.envSecrets $.Values.envSecrets.enableEnv }}
           env:
