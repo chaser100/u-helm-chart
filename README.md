@@ -83,6 +83,69 @@ helm install my-release uni-chart/application -f my-values.yaml
 
 ---
 
+## Plain Ingress (`ingressPlain`)
+Новая возможность — создание произвольных Ingress-ресурсов с гибкой настройкой.
+
+### `ingressPlain.enabled`
+Включить ли Plain Ingress.
+
+### `ingressPlain.items`
+Список Ingress-объектов. Каждый объект поддерживает:
+
+- `name` — имя Ingress (если не задано, сгенерируется автоматически).
+- `className` — класс Ingress-контроллера.
+- `annotations` — аннотации.
+- `labels` — дополнительные метки.
+- `tls` — список TLS-настроек:
+  - `secretName`
+  - `hosts`
+- `rules` — список правил:
+  - `host` — домен.
+  - `paths` — список путей:
+    - `path` — маршрут (например, `/api`).
+    - `pathType` — тип пути (`Prefix`, `ImplementationSpecific`).
+    - `backend.service.name` — имя backend-сервиса.
+    - `backend.service.port` — порт backend-сервиса.
+    - `createService` — создать ли автоматически Service для этого пути.
+    - `service` — параметры создаваемого Service (опционально):
+      - `type` — тип (`ClusterIP`, `NodePort` и т.д.).
+      - `port`, `targetPort`, `portName`, `protocol`
+      - `selector` — метки для выбора подов.
+      - `annotations`, `labels`
+
+### Пример:
+```yaml
+ingressPlain:
+  enabled: true
+  items:
+    - name: public-api
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+      rules:
+        - host: api.example.com
+          paths:
+            - path: /
+              backend:
+                service:
+                  name: users-service
+                  port: 8080
+              createService: true
+              service:
+                type: ClusterIP
+                selector:
+                  app: users
+                port: 8080
+            - path: /orders
+              backend:
+                service:
+                  name: orders-service
+                  port: 9090
+              createService: false
+```
+
+---
+
 ## Probes
 
 ### `livenessProbe`, `readinessProbe`, `startupProbe`

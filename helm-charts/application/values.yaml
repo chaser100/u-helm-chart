@@ -237,3 +237,77 @@ extraManifests: {}
 #          remoteRef:
 #            key: path/keys
 #            property: BAR
+
+ingressPlain:
+  enabled: false
+
+#ingressPlain:
+#  enabled: true
+#  items:
+#    - name: public-api
+#      className: nginx
+#      annotations:
+#        nginx.ingress.kubernetes.io/rewrite-target: /
+#      rules:
+#        - host: api.example.com
+#          paths:
+#            - path: /
+#              backend:
+#                service:
+#                  name: users-service
+#                  port: 8080
+#              createService: true
+#              service:
+#                type: ClusterIP
+#                selector:
+#                  app: users
+#                port: 8080
+#
+#            - path: /orders
+#              backend:
+#                service:
+#                  name: orders-service
+#                  port: 9090
+#              createService: false
+#
+#    - name: internal-dashboard
+#      className: nginx-internal
+#      annotations:
+#        nginx.ingress.kubernetes.io/auth-type: basic
+#        nginx.ingress.kubernetes.io/auth-secret: dashboard-auth
+#      tls:
+#        - secretName: dashboard-tls
+#          hosts:
+#            - dashboard.internal.local
+#      rules:
+#        - host: dashboard.internal.local
+#          paths:
+#            - path: /
+#              backend:
+#                service:
+#                  name: dashboard-service
+#                  port: 3000
+#              createService: true
+#              service:
+#                type: ClusterIP
+#                selector:
+#                  app: dashboard
+#                port: 3000
+#
+#    - name: external-tools
+#      className: nginx
+#      rules:
+#        - host: tools.example.net
+#          paths:
+#            - path: /grafana
+#              backend:
+#                service:
+#                  name: grafana
+#                  port: 80
+#              createService: false
+#            - path: /prometheus
+#              backend:
+#                service:
+#                  name: prometheus
+#                  port: 9090
+#              createService: false

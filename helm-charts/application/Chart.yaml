@@ -6,10 +6,10 @@ keywords:
 
 type: application
 
-version: 0.1.5
+version: 0.1.6
 
-appVersion: "0.1.5"
+appVersion: "0.1.6"
 
 maintainers:
   - name: Viacheslav Lochashvili
-    email: The maintainers email (optional for each maintainer)
+    email: v.lochashvili@protonmail.com
