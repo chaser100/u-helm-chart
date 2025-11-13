@@ -41,14 +41,27 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ .Values.image }}:{{ .Values.imageTag }}
           imagePullPolicy: {{ .Values.imagePullPolicy | default "Always" }}
+          {{- $envVars := list }}
+          {{- if .Values.env }}
+          {{- range .Values.env }}
+            {{- $envVars = append $envVars . }}
+          {{- end }}
+          {{- end }}
           {{- if and .Values.envSecrets .Values.envSecrets.enableEnv }}
-          env:
             {{- range .Values.envSecrets.envs }}
+              {{- $envVars = append $envVars (dict "name" .name "valueFrom" (dict "secretKeyRef" (dict "name" .secretName "key" .secretKey))) }}
+            {{- end }}
+          {{- end }}
+          {{- if $envVars }}
+          env:
+            {{- range $envVars }}
             - name: {{ .name }}
+              {{- if .value }}
+              value: {{ .value | quote }}
+              {{- else if .valueFrom }}
               valueFrom:
-                secretKeyRef:
-                  name: {{ .secretName }}
-                  key: {{ .secretKey }}
+                {{- toYaml .valueFrom | nindent 16 }}
+              {{- end }}
             {{- end }}
           {{- end }}
           {{- if and .Values.envFromSecrets .Values.envFromSecrets.enableEnvFrom }}
@@ -128,20 +141,53 @@ spec:
           livenessProbe:
             {{- toYaml .livenessProbe | nindent 12 }}
           {{- end }}
-          {{- if and $.Values.envSecrets $.Values.envSecrets.enableEnv }}
-          env:
-            {{- range $.Values.envSecrets.envs }}
-            - name: {{ .name }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .secretName }}
-                  key: {{ .secretKey }}
+          {{- $sidecarEnvVars := list }}
+          {{- if .env }}
+            {{- range .env }}
+              {{- $sidecarEnvVars = append $sidecarEnvVars . }}
             {{- end }}
           {{- end }}
+          {{- if $.Values.env }}
+            {{- range $.Values.env }}
+              {{- $sidecarEnvVars = append $sidecarEnvVars . }}
+            {{- end }}
+          {{- end }}
+          {{- if and $.Values.envSecrets $.Values.envSecrets.enableEnv }}
+            {{- range $.Values.envSecrets.envs }}
+              {{- $sidecarEnvVars = append $sidecarEnvVars (dict "name" .name "valueFrom" (dict "secretKeyRef" (dict "name" .secretName "key" .secretKey))) }}
+            {{- end }}
+          {{- end }}
+          {{- if .envFromSecrets }}
+            {{- range .envFromSecrets }}
+              {{- $sidecarEnvVars = append $sidecarEnvVars (dict "name" .name "valueFrom" (dict "secretKeyRef" (dict "name" .secretName "key" .secretKey))) }}
+            {{- end }}
+          {{- end }}
+          {{- if $sidecarEnvVars }}
+          env:
+            {{- range $sidecarEnvVars }}
+            - name: {{ .name }}
+              {{- if .value }}
+              value: {{ .value | quote }}
+              {{- else if .valueFrom }}
+              valueFrom:
+                {{- toYaml .valueFrom | nindent 16 }}
+              {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- $envFromList := list }}
           {{- if and $.Values.envFromSecrets $.Values.envFromSecrets.enableEnvFrom }}
+            {{- $envFromList = append $envFromList (dict "secretRef" (dict "name" $.Values.envFromSecrets.secretName)) }}
+          {{- end }}
+          {{- if .envFrom }}
+            {{- range .envFrom }}
+              {{- $envFromList = append $envFromList . }}
+            {{- end }}
+          {{- end }}
+          {{- if $envFromList }}
           envFrom:
-            - secretRef:
-                name: {{ $.Values.envFromSecrets.secretName }}
+            {{- range $envFromList }}
+            - {{- toYaml . | nindent 14 }}
+            {{- end }}
           {{- end }}
           {{- if .volumeMounts }}
           volumeMounts:

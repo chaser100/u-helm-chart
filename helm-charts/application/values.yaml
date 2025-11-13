@@ -82,6 +82,9 @@ job:
   backoffLimit: 2
   command: ["/bin/sh", "-c"]
   args: ["echo 'Hello from job'; sleep 10"]
+  env: []
+  #  - name: JOB_ENV
+  #    value: production
   envFromSecrets:
     - name: JOB_TOKEN
       secretName: example-external-secret
@@ -107,6 +110,9 @@ cronjob:
   failedJobsHistoryLimit: 1
   command: ["/bin/sh", "-c"]
   args: ["date >> /etc/cronlog/output.txt"]
+  env: []
+  #  - name: CRON_ENV
+  #    value: production
   envFromSecrets:
     - name: API_KEY
       secretName: my-secret
@@ -191,6 +197,9 @@ extraContainers: {}
 #    - name: sidecar
 #      image: busybox
 #      command: [ "sleep", "3600" ]
+#      env:
+#        - name: SIDECAR_ENV
+#          value: production
 #      envFromSecrets:
 #        - name: BAR
 #          secretName: example-external-secret
@@ -198,6 +207,14 @@ extraContainers: {}
 #      volumeMounts:
 #        - name: my-config
 #          mountPath: /mnt/config
+
+env: []
+#  - name: ENVIRONMENT
+#    value: production
+#  - name: LOG_LEVEL
+#    value: info
+#  - name: APP_NAME
+#    value: my-app
 
 envFromSecrets:
   enableEnvFrom: false
