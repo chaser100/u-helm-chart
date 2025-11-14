@@ -685,6 +685,8 @@ Inject raw Kubernetes manifests for advanced use cases (e.g., ExternalSecrets, c
 |-----------|-------------|---------|
 | `extraManifests` | List of Kubernetes manifest objects | `{}` |
 
+**Important:** Resources of kind `ExternalSecret` are automatically configured with Helm pre-install/pre-upgrade hooks to ensure they are created before the deployment. This prevents `ConfigContainerError` when the deployment tries to use secrets that haven't been created yet.
+
 #### Example
 
 ```yaml
@@ -713,6 +715,11 @@ extraManifests:
             key: path/keys
             property: BAR
 ```
+
+**Note:** For `ExternalSecret` resources, the chart automatically adds the following Helm hook annotations:
+- `helm.sh/hook: pre-install,pre-upgrade` - Ensures creation before deployment
+- `helm.sh/hook-weight: "-5"` - Sets execution order (negative weight means earlier execution)
+- `helm.sh/hook-delete-policy: before-hook-creation` - Cleans up old resources before creating new ones
 
 ## Usage Examples
 
