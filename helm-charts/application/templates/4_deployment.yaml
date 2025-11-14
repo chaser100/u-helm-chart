@@ -109,7 +109,7 @@ spec:
       {{- if and .enabled .containers }}
       {{- range .containers }}
         - name: {{ .name }}
-          image: {{ .image }}
+          image: {{ .image }}:{{ default $.Values.imageTag .imageTag }}
           {{- if .imagePullPolicy }}
           imagePullPolicy: {{ .imagePullPolicy }}
           {{- end }}
