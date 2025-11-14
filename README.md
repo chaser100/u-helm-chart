@@ -845,6 +845,10 @@ curl -H "Host: example.com" http://<ingress-ip>/
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a list of changes and version history.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

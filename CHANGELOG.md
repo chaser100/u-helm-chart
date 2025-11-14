@@ -1,0 +1,52 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.2.1] - 2025-11-13
+
+### Added
+- Support for plain environment variables (not only from secrets) via `env` parameter
+- Automatic Helm hooks for `ExternalSecret` resources in `extraManifests` to ensure they are created before deployment
+- Support for plain environment variables in Job, CronJob, and sidecar containers
+- Comprehensive test suite with 12 test scenarios covering all features
+
+### Changed
+- Updated documentation to reflect new environment variables functionality
+- Improved `extraManifests` template to automatically add pre-install/pre-upgrade hooks for ExternalSecret resources
+
+### Fixed
+- Fixed issue where deployment could fail with `ConfigContainerError` when using ExternalSecret resources
+
+## [0.2.0] - 2025-11-13
+
+### Added
+- Support for disabling deployment via `deploymentDisable` parameter
+- Plain Ingress feature with automatic service creation
+- Enhanced ingress configuration options
+- Support for multiple ingress resources
+
+### Changed
+- Chart version updated to 0.2.0
+- Improved ingress template structure
+
+## [0.1.9] - Previous
+
+### Added
+- Initial chart release
+- Basic deployment, service, and ingress support
+- Job and CronJob support
+- ConfigMap and volume management
+- Sidecar containers support
+- Autoscaling (HPA) support
+- Environment variables from secrets
+- Extra manifests support
+
+---
+
+[0.2.1]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.2.1
+[0.2.0]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.2.0
+[0.1.9]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.1.9
+
