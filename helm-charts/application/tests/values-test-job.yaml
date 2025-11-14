@@ -1,0 +1,37 @@
+# Test with Job
+replicaCount: 1
+image: nginx
+imageTag: 1.21
+job:
+  enabled: true
+  name: migration-job
+  image: postgres:14
+  imageTag: latest
+  imagePullPolicy: IfNotPresent
+  restartPolicy: OnFailure
+  backoffLimit: 3
+  command: ["/bin/bash", "-c"]
+  args: ["psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f /migrations/init.sql"]
+  env:
+    - name: MIGRATION_ENV
+      value: production
+  envFromSecrets:
+    - name: DB_HOST
+      secretName: db-secret
+      secretKey: host
+    - name: DB_USER
+      secretName: db-secret
+      secretKey: user
+    - name: DB_NAME
+      secretName: db-secret
+      secretKey: database
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+service:
+  type: ClusterIP
+  port: 80

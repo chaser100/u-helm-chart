@@ -1,0 +1,8 @@
+# Test with disabled deployment
+deploymentDisable: true
+replicaCount: 1
+image: nginx
+imageTag: 1.21
+service:
+  type: ClusterIP
+  port: 80

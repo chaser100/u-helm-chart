@@ -1,0 +1,19 @@
+# Test with Bank Vaults webhooks annotations
+replicaCount: 1
+image: nginx
+imageTag: 1.21
+podAnnotations:
+  vault.security.banzaicloud.io/vault-addr: "https://vault.example.com:8200"
+  vault.security.banzaicloud.io/vault-role: "my-app-role"
+  vault.security.banzaicloud.io/vault-path: "kubernetes"
+  vault.security.banzaicloud.io/vault-skip-verify: "false"
+env:
+  - name: DATABASE_URL
+    value: vault:secret/data/accounts/aws#DATABASE_URL
+  - name: API_KEY
+    value: vault:secret/data/accounts/aws#API_KEY
+  - name: ENVIRONMENT
+    value: production  # Plain value, not from vault
+service:
+  type: ClusterIP
+  port: 80

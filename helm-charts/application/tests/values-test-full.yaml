@@ -1,0 +1,194 @@
+# Full feature test - all features enabled
+replicaCount: 3
+image: myapp
+imageTag: v1.0.0
+imagePullPolicy: IfNotPresent
+imagePullSecrets:
+  - name: regcred
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/my-role
+  name: ""
+
+deploymentAnnotations: {}
+  # prometheus.io/scrape: "true"
+
+podAnnotations:
+  vault.security.banzaicloud.io/vault-addr: "https://vault.example.com:8200"
+  vault.security.banzaicloud.io/vault-role: "my-app-role"
+
+podLabels:
+  app.kubernetes.io/component: backend
+
+podSecurityContext:
+  fsGroup: 2000
+  runAsNonRoot: true
+  runAsUser: 1000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+
+service:
+  name: http
+  type: LoadBalancer
+  port: 8080
+  protocol: TCP
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: app.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: app-tls
+      hosts:
+        - app.example.com
+
+env:
+  - name: ENVIRONMENT
+    value: production
+  - name: LOG_LEVEL
+    value: info
+
+envSecrets:
+  enableEnv: true
+  envs:
+    - name: API_KEY
+      secretName: my-secret
+      secretKey: API_KEY
+
+envFromSecrets:
+  enableEnvFrom: true
+  secretName: example-external-secret
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+startupProbe:
+  httpGet:
+    path: /startup
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+
+configMaps:
+  - name: app-config
+    mountPath: /etc/app-config
+    readOnly: true
+    data:
+      app.conf: |
+        debug = true
+        log_level = info
+
+# volumes:
+#   - name: persistent-storage
+#     persistentVolumeClaim:
+#       claimName: my-pvc
+
+# volumeMounts:
+#   - name: persistent-storage
+#     mountPath: "/data"
+
+nodeSelector: {}
+  # node-role.kubernetes.io/app: ""
+
+tolerations:
+  - key: "node-role.kubernetes.io/app"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - application
+          topologyKey: kubernetes.io/hostname
+
+extraContainers:
+  enabled: true
+  containers:
+    - name: sidecar
+      image: busybox:latest
+      command: ["sleep", "3600"]
+      env:
+        - name: SIDECAR_ENV
+          value: production
+
+job:
+  enabled: true
+  name: migration-job
+  image: postgres:14
+  imageTag: latest
+  command: ["/bin/bash", "-c"]
+  args: ["echo 'Migration complete'"]
+  env:
+    - name: JOB_ENV
+      value: production
+
+cronjob:
+  enabled: true
+  name: backup-cronjob
+  image: postgres:14
+  schedule: "0 2 * * *"
+  env:
+    - name: CRON_ENV
+      value: production
+
+extraManifests:
+  - apiVersion: external-secrets.io/v1beta1
+    kind: ExternalSecret
+    metadata:
+      name: example-external-secret
+      namespace: default
+    spec:
+      refreshInterval: 10s
+      secretStoreRef:
+        name: vault-cluster-backend
+        kind: ClusterSecretStore
+

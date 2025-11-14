@@ -1,0 +1,27 @@
+# Test with Ingress
+replicaCount: 2
+image: nginx
+imageTag: 1.21
+service:
+  type: ClusterIP
+  port: 80
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+    - host: example.com
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: api.example.com
+      paths:
+        - path: /api
+          pathType: Prefix
+  tls:
+    - secretName: example-tls
+      hosts:
+        - example.com
+        - api.example.com

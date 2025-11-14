@@ -1,0 +1,14 @@
+# Test with plain environment variables
+replicaCount: 1
+image: nginx
+imageTag: 1.21
+env:
+  - name: ENVIRONMENT
+    value: production
+  - name: LOG_LEVEL
+    value: info
+  - name: APP_NAME
+    value: my-app
+service:
+  type: ClusterIP
+  port: 80

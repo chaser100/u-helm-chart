@@ -1,0 +1,20 @@
+# Test with Autoscaling
+replicaCount: 2
+image: nginx
+imageTag: 1.21
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+service:
+  type: ClusterIP
+  port: 80

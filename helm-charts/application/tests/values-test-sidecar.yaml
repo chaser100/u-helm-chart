@@ -1,0 +1,40 @@
+# Test with sidecar containers
+replicaCount: 1
+image: nginx
+imageTag: 1.21
+env:
+  - name: GLOBAL_ENV
+    value: shared
+extraContainers:
+  enabled: true
+  containers:
+    - name: sidecar
+      image: busybox:latest
+      command: ["sleep", "3600"]
+      env:
+        - name: SIDECAR_ENV
+          value: production
+      envFromSecrets:
+        - name: BAR
+          secretName: example-external-secret
+          secretKey: BAR
+      volumeMounts:
+        - name: my-config
+          mountPath: /mnt/config
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 128Mi
+configMaps:
+  - name: my-config
+    mountPath: /etc/my-config
+    readOnly: true
+    data:
+      app.conf: |
+        debug = true
+service:
+  type: ClusterIP
+  port: 80

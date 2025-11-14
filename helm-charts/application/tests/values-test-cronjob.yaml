@@ -1,0 +1,40 @@
+# Test with CronJob
+replicaCount: 1
+image: nginx
+imageTag: 1.21
+cronjob:
+  enabled: true
+  name: backup-cronjob
+  image: postgres:14
+  imageTag: latest
+  imagePullPolicy: IfNotPresent
+  schedule: "0 2 * * *"
+  restartPolicy: OnFailure
+  backoffLimit: 2
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
+  command: ["/bin/bash", "-c"]
+  args: ["pg_dump -h $DB_HOST -U $DB_USER -d $DB_NAME > /backups/backup-$(date +%Y%m%d).sql"]
+  env:
+    - name: BACKUP_ENV
+      value: production
+  envFromSecrets:
+    - name: DB_HOST
+      secretName: db-secret
+      secretKey: host
+    - name: DB_USER
+      secretName: db-secret
+      secretKey: user
+    - name: DB_NAME
+      secretName: db-secret
+      secretKey: database
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+service:
+  type: ClusterIP
+  port: 80

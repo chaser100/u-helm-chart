@@ -1,0 +1,35 @@
+# Test with extraManifests - ExternalSecret and other resources
+replicaCount: 1
+image: nginx
+imageTag: 1.21
+service:
+  type: ClusterIP
+  port: 80
+extraManifests:
+  - apiVersion: external-secrets.io/v1beta1
+    kind: ExternalSecret
+    metadata:
+      name: example-external-secret
+      namespace: default
+    spec:
+      refreshInterval: 10s
+      secretStoreRef:
+        name: vault-cluster-backend
+        kind: ClusterSecretStore
+      target:
+        name: example-external-secret
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: test-configmap
+    data:
+      test: value
+  - apiVersion: external-secrets.io/v1beta1
+    kind: ExternalSecret
+    metadata:
+      name: another-external-secret
+    spec:
+      refreshInterval: 30s
+      secretStoreRef:
+        name: another-backend
+        kind: ClusterSecretStore

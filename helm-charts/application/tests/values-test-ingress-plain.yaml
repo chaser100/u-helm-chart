@@ -1,0 +1,40 @@
+# Test with Plain Ingress
+replicaCount: 1
+image: nginx
+imageTag: 1.21
+service:
+  type: ClusterIP
+  port: 80
+ingressPlain:
+  enabled: true
+  items:
+    - name: public-api
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      rules:
+        - host: api.example.com
+          paths:
+            - path: /
+              backend:
+                service:
+                  name: users-service
+                  port: 8080
+              createService: true
+              service:
+                type: ClusterIP
+                selector:
+                  app: users
+                port: 8080
+                targetPort: 8080
+            - path: /orders
+              backend:
+                service:
+                  name: orders-service
+                  port: 9090
+              createService: false
+      tls:
+        - secretName: api-tls
+          hosts:
+            - api.example.com
