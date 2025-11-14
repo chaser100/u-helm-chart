@@ -2,7 +2,7 @@
 
 A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
 
-**Chart Version:** 0.2.0
+**Chart Version:** 0.2.1
 
 ## Features
 
