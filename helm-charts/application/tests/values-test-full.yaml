@@ -3,6 +3,13 @@ replicaCount: 3
 image: myapp
 imageTag: v1.0.0
 imagePullPolicy: IfNotPresent
+
+containerName: "my-custom-app"
+command:
+  - "/bin/sh"
+  - "-c"
+  - "echo 'Starting application' && exec /app/start.sh"
+
 imagePullSecrets:
   - name: regcred
 

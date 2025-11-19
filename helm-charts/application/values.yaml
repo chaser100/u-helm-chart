@@ -7,6 +7,15 @@ image: "nginx"
 
 imageTag: "latest"
 
+containerName: ""
+# Override default container name (defaults to Chart.Name if not set)
+
+command: []
+# Command to run in the main container
+#  - "/bin/sh"
+#  - "-c"
+#  - "echo hello"
+
 imagePullSecrets: []
 #  - name: imagepullsecret1
 #  - name: imagepullsecret2
