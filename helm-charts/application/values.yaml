@@ -200,6 +200,41 @@ tolerations: {}
 
 affinity: {}
 
+initContainers: {}
+#  enabled: true
+#  containers:
+#    - name: init-migration
+#      image: busybox
+#      imageTag: latest
+#      imagePullPolicy: IfNotPresent
+#      command: ["/bin/sh", "-c"]
+#      args: ["echo 'Running migration'"]
+#      env:
+#        - name: INIT_ENV
+#          value: production
+#      envFromSecrets:
+#        - name: DB_PASSWORD
+#          secretName: db-secret
+#          secretKey: password
+#      envFrom:
+#        - secretRef:
+#            name: app-secrets
+#        - configMapRef:
+#            name: app-config
+#      volumeMounts:
+#        - name: init-data
+#          mountPath: /mnt/init
+#      securityContext:
+#        runAsNonRoot: true
+#        runAsUser: 1000
+#      resources:
+#        requests:
+#          cpu: 50m
+#          memory: 64Mi
+#        limits:
+#          cpu: 100m
+#          memory: 128Mi
+
 extraContainers: {}
 #  enabled: true
 #  containers:

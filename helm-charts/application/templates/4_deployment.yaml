@@ -35,6 +35,88 @@ spec:
       serviceAccountName: {{ include "application.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.initContainers }}
+      {{- if and .enabled .containers }}
+      initContainers:
+        {{- range .containers }}
+        - name: {{ .name }}
+          image: {{ .image }}:{{ default $.Values.imageTag .imageTag }}
+          {{- if .imagePullPolicy }}
+          imagePullPolicy: {{ .imagePullPolicy }}
+          {{- else }}
+          imagePullPolicy: {{ $.Values.imagePullPolicy | default "Always" }}
+          {{- end }}
+          {{- if .command }}
+          command:
+            {{- toYaml .command | nindent 12 }}
+          {{- end }}
+          {{- if .args }}
+          args:
+            {{- toYaml .args | nindent 12 }}
+          {{- end }}
+          {{- if .securityContext }}
+          securityContext:
+            {{- toYaml .securityContext | nindent 12 }}
+          {{- end }}
+          {{- $initEnvVars := list }}
+          {{- if .env }}
+            {{- range .env }}
+              {{- $initEnvVars = append $initEnvVars . }}
+            {{- end }}
+          {{- end }}
+          {{- if $.Values.env }}
+            {{- range $.Values.env }}
+              {{- $initEnvVars = append $initEnvVars . }}
+            {{- end }}
+          {{- end }}
+          {{- if and $.Values.envSecrets $.Values.envSecrets.enableEnv }}
+            {{- range $.Values.envSecrets.envs }}
+              {{- $initEnvVars = append $initEnvVars (dict "name" .name "valueFrom" (dict "secretKeyRef" (dict "name" .secretName "key" .secretKey))) }}
+            {{- end }}
+          {{- end }}
+          {{- if .envFromSecrets }}
+            {{- range .envFromSecrets }}
+              {{- $initEnvVars = append $initEnvVars (dict "name" .name "valueFrom" (dict "secretKeyRef" (dict "name" .secretName "key" .secretKey))) }}
+            {{- end }}
+          {{- end }}
+          {{- if $initEnvVars }}
+          env:
+            {{- range $initEnvVars }}
+            - name: {{ .name }}
+              {{- if .value }}
+              value: {{ .value | quote }}
+              {{- else if .valueFrom }}
+              valueFrom:
+                {{- toYaml .valueFrom | nindent 16 }}
+              {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- $initEnvFromList := list }}
+          {{- if and $.Values.envFromSecrets $.Values.envFromSecrets.enableEnvFrom }}
+            {{- $initEnvFromList = append $initEnvFromList (dict "secretRef" (dict "name" $.Values.envFromSecrets.secretName)) }}
+          {{- end }}
+          {{- if .envFrom }}
+            {{- range .envFrom }}
+              {{- $initEnvFromList = append $initEnvFromList . }}
+            {{- end }}
+          {{- end }}
+          {{- if $initEnvFromList }}
+          envFrom:
+            {{- range $initEnvFromList }}
+            - {{- toYaml . | nindent 14 }}
+            {{- end }}
+          {{- end }}
+          {{- if .volumeMounts }}
+          volumeMounts:
+            {{- toYaml .volumeMounts | nindent 12 }}
+          {{- end }}
+          {{- if .resources }}
+          resources:
+            {{- toYaml .resources | nindent 12 }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- end }}
       containers:
         - name: {{ .Values.containerName | default .Chart.Name }}
           securityContext:

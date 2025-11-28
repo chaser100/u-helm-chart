@@ -2,7 +2,7 @@
 
 A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
 
-**Chart Version:** 0.2.2
+**Chart Version:** 0.2.3
 
 ## Features
 
@@ -444,6 +444,77 @@ affinity:
           topologyKey: kubernetes.io/hostname
 ```
 
+### Init Containers
+
+Run initialization containers that complete before the main application containers start. Useful for database migrations, file downloads, or other setup tasks.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `initContainers.enabled` | Enable init containers | `false` |
+| `initContainers.containers` | List of init container definitions | `[]` |
+
+Each init container supports:
+- `name` - Container name (required)
+- `image` - Container image (required)
+- `imageTag` - Container image tag (defaults to main `imageTag` if not set)
+- `imagePullPolicy` - Image pull policy (defaults to main `imagePullPolicy` if not set)
+- `command` - Container command
+- `args` - Container arguments
+- `env` - Plain environment variables
+- `envFromSecrets` - Environment variables from secrets
+- `envFrom` - Environment variables from ConfigMaps or Secrets
+- `volumeMounts` - Volume mounts
+- `resources` - Resource requests and limits
+- `securityContext` - Security context for the init container
+
+**Note:** Init containers inherit global `env` variables from the root level. They run sequentially and must complete successfully before the main containers start.
+
+#### Example
+
+```yaml
+initContainers:
+  enabled: true
+  containers:
+    - name: init-migration
+      image: myapp
+      imageTag: v1.0.0
+      imagePullPolicy: IfNotPresent
+      command: ["/bin/sh", "-c"]
+      args: ["python manage.py migrate"]
+      env:
+        - name: INIT_ENV
+          value: production
+      envFromSecrets:
+        - name: DB_PASSWORD
+          secretName: db-secret
+          secretKey: password
+      envFrom:
+        - secretRef:
+            name: app-secrets
+        - configMapRef:
+            name: app-config
+      volumeMounts:
+        - name: init-data
+          mountPath: /mnt/init
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 128Mi
+    - name: init-download
+      image: busybox:latest
+      command: ["/bin/sh", "-c"]
+      args: ["wget -O /data/config.json https://example.com/config.json"]
+      volumeMounts:
+        - name: shared-data
+          mountPath: /data
+```
+
 ### Sidecar Containers
 
 Deploy additional containers alongside the main application container.
@@ -786,6 +857,32 @@ resources:
   limits:
     cpu: 1000m
     memory: 512Mi
+```
+
+### Application with Init Container
+
+```yaml
+replicaCount: 2
+image: myapp
+imageTag: v1.0.0
+initContainers:
+  enabled: true
+  containers:
+    - name: init-migration
+      image: myapp
+      imageTag: v1.0.0
+      command: ["/bin/sh", "-c"]
+      args: ["python manage.py migrate"]
+      envFromSecrets:
+        - name: DATABASE_URL
+          secretName: db-secret
+          secretKey: url
+      volumeMounts:
+        - name: shared-data
+          mountPath: /mnt/data
+volumes:
+  - name: shared-data
+    emptyDir: {}
 ```
 
 ### Application with Sidecar Container
