@@ -2,7 +2,7 @@
 
 A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
 
-**Chart Version:** 0.2.3
+**Chart Version:** 0.2.4
 
 ## Features
 
@@ -382,9 +382,109 @@ configMaps:
         key=value
 ```
 
+### PersistentVolumeClaims
+
+Create and manage PersistentVolumeClaims (PVCs) for persistent storage. PVCs are automatically mounted in the main container, init containers, and sidecar containers when `mountPath` is specified.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `persistentVolumeClaims` | List of PVC definitions | `[]` |
+
+Each PVC entry supports:
+- `name` - PVC name (required)
+- `size` - Storage size (e.g., "10Gi", defaults to "1Gi" if not specified)
+- `storageClassName` - Storage class name (optional)
+- `accessModes` - List of access modes (defaults to `["ReadWriteOnce"]` if not specified)
+- `mountPath` - Mount path in containers (optional, if specified, PVC will be automatically mounted)
+- `readOnly` - Whether the volume is read-only (defaults to `false`)
+- `subPath` - Subpath within the volume (optional)
+- `annotations` - Additional annotations for the PVC
+- `resources` - Custom resources specification (overrides `size` if specified)
+- `volumeMode` - Volume mode (Filesystem or Block)
+- `dataSource` - Data source for cloning volumes
+- `selector` - Label selector for volume binding
+
+**Note:** When `mountPath` is specified, the PVC is automatically:
+- Added to the pod's volumes
+- Mounted in the main container only
+
+PVCs from `persistentVolumeClaims` are **not** automatically mounted in init containers or sidecar containers. To use persistent storage in init containers or sidecar containers, configure individual `pvc` settings for each container.
+
+#### Example
+
+```yaml
+persistentVolumeClaims:
+  - name: data-storage
+    size: 10Gi
+    storageClassName: fast-ssd
+    accessModes:
+      - ReadWriteOnce
+    mountPath: /data
+    readOnly: false
+  - name: logs-storage
+    size: 5Gi
+    storageClassName: standard
+    accessModes:
+      - ReadWriteOnce
+    mountPath: /var/log
+    readOnly: false
+  - name: shared-storage
+    size: 20Gi
+    storageClassName: nfs
+    accessModes:
+      - ReadWriteMany
+    mountPath: /shared
+    annotations:
+      volume.beta.kubernetes.io/storage-class: nfs
+```
+
+#### Using PVCs in Init Containers
+
+Each init container can have its own PVC configured individually:
+
+```yaml
+initContainers:
+  enabled: true
+  containers:
+    - name: init-migration
+      image: myapp
+      command: ["/bin/sh", "-c"]
+      args: ["python manage.py migrate"]
+      pvc:
+        enabled: true
+        name: init-migration-pvc
+        size: 5Gi
+        storageClassName: standard
+        accessModes:
+          - ReadWriteOnce
+        mountPath: /data
+        readOnly: false
+```
+
+#### Using PVCs in Sidecar Containers
+
+Each sidecar container can have its own PVC configured individually:
+
+```yaml
+extraContainers:
+  enabled: true
+  containers:
+    - name: log-collector
+      image: fluent/fluent-bit:latest
+      pvc:
+        enabled: true
+        name: log-collector-pvc
+        size: 10Gi
+        storageClassName: standard
+        accessModes:
+          - ReadWriteOnce
+        mountPath: /var/log
+        readOnly: false
+```
+
 ### Volumes
 
-Additional volumes for mounting ConfigMaps, Secrets, PVCs, etc.
+Additional volumes for mounting ConfigMaps, Secrets, and other volume types.
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
@@ -399,16 +499,15 @@ volumes:
     secret:
       secretName: mysecret
       optional: false
-  - name: persistent-storage
-    persistentVolumeClaim:
-      claimName: my-pvc
+  - name: temp-storage
+    emptyDir: {}
 
 volumeMounts:
   - name: custom-secret
     mountPath: "/etc/secrets"
     readOnly: true
-  - name: persistent-storage
-    mountPath: "/data"
+  - name: temp-storage
+    mountPath: "/tmp"
 ```
 
 ### Pod Scheduling
@@ -464,10 +563,24 @@ Each init container supports:
 - `envFromSecrets` - Environment variables from secrets
 - `envFrom` - Environment variables from ConfigMaps or Secrets
 - `volumeMounts` - Volume mounts
+- `pvc` - Individual PVC configuration for this init container (optional)
+  - `enabled` - Enable PVC creation (default: `false`)
+  - `name` - PVC name (defaults to `{container-name}-pvc` if not set)
+  - `size` - Storage size (e.g., "5Gi", defaults to "1Gi")
+  - `storageClassName` - Storage class name
+  - `accessModes` - List of access modes (defaults to `["ReadWriteOnce"]`)
+  - `mountPath` - Mount path in the container
+  - `readOnly` - Whether the volume is read-only (default: `false`)
+  - `subPath` - Subpath within the volume (optional)
+  - `annotations` - Additional annotations for the PVC
+  - `resources` - Custom resources specification
+  - `volumeMode` - Volume mode (Filesystem or Block)
+  - `dataSource` - Data source for cloning volumes
+  - `selector` - Label selector for volume binding
 - `resources` - Resource requests and limits
 - `securityContext` - Security context for the init container
 
-**Note:** Init containers inherit global `env` variables from the root level. They run sequentially and must complete successfully before the main containers start.
+**Note:** Init containers inherit global `env` variables from the root level. They run sequentially and must complete successfully before the main containers start. PVCs defined in `persistentVolumeClaims` are **not** automatically mounted in init containers - use individual `pvc` configuration if you need persistent storage for init containers.
 
 #### Example
 
@@ -524,6 +637,8 @@ Deploy additional containers alongside the main application container.
 | `extraContainers.enabled` | Enable sidecar containers | `false` |
 | `extraContainers.containers` | List of sidecar container definitions | `[]` |
 
+Each sidecar container supports the same parameters as init containers, including individual `pvc` configuration.
+
 #### Example
 
 ```yaml
@@ -543,6 +658,15 @@ extraContainers:
       volumeMounts:
         - name: my-config
           mountPath: /mnt/config
+      pvc:
+        enabled: true
+        name: sidecar-pvc
+        size: 10Gi
+        storageClassName: standard
+        accessModes:
+          - ReadWriteOnce
+        mountPath: /var/log
+        readOnly: false
       resources:
         requests:
           cpu: 50m
@@ -552,7 +676,7 @@ extraContainers:
           memory: 128Mi
 ```
 
-**Note:** Each sidecar container can have its own `env` variables. Global `env` variables from the root level are also inherited by all sidecar containers.
+**Note:** Each sidecar container can have its own `env` variables. Global `env` variables from the root level are also inherited by all sidecar containers. PVCs defined in `persistentVolumeClaims` are **not** automatically mounted in sidecar containers - use individual `pvc` configuration if you need persistent storage for sidecar containers.
 
 ### Environment Variables
 
@@ -859,12 +983,17 @@ resources:
     memory: 512Mi
 ```
 
-### Application with Init Container
+### Application with Init Container and Individual PVC
 
 ```yaml
 replicaCount: 2
 image: myapp
 imageTag: v1.0.0
+persistentVolumeClaims:
+  - name: data-storage
+    size: 10Gi
+    mountPath: /data
+
 initContainers:
   enabled: true
   containers:
@@ -877,12 +1006,78 @@ initContainers:
         - name: DATABASE_URL
           secretName: db-secret
           secretKey: url
+      pvc:
+        enabled: true
+        name: init-migration-pvc
+        size: 5Gi
+        storageClassName: standard
+        accessModes:
+          - ReadWriteOnce
+        mountPath: /mnt/init
+```
+
+### Application with PersistentVolumeClaim
+
+```yaml
+replicaCount: 2
+image: myapp
+imageTag: v1.0.0
+persistentVolumeClaims:
+  - name: data-storage
+    size: 10Gi
+    storageClassName: fast-ssd
+    accessModes:
+      - ReadWriteOnce
+    mountPath: /data
+  - name: logs-storage
+    size: 5Gi
+    storageClassName: standard
+    accessModes:
+      - ReadWriteOnce
+    mountPath: /var/log
+```
+
+### Application with PVC in Init Container
+
+```yaml
+replicaCount: 2
+image: myapp
+imageTag: v1.0.0
+persistentVolumeClaims:
+  - name: data-storage
+    size: 10Gi
+    mountPath: /data
+initContainers:
+  enabled: true
+  containers:
+    - name: init-migration
+      image: myapp
+      imageTag: v1.0.0
+      command: ["/bin/sh", "-c"]
+      args: ["python manage.py migrate"]
       volumeMounts:
-        - name: shared-data
-          mountPath: /mnt/data
-volumes:
-  - name: shared-data
-    emptyDir: {}
+        - name: data-storage
+          mountPath: /data
+```
+
+### Application with PVC in Sidecar Container
+
+```yaml
+replicaCount: 1
+image: myapp
+imageTag: v1.0.0
+persistentVolumeClaims:
+  - name: logs-storage
+    size: 5Gi
+    mountPath: /var/log
+extraContainers:
+  enabled: true
+  containers:
+    - name: log-collector
+      image: fluent/fluent-bit:latest
+      volumeMounts:
+        - name: logs-storage
+          mountPath: /var/log
 ```
 
 ### Application with Sidecar Container

@@ -106,9 +106,28 @@ spec:
             - {{- toYaml . | nindent 14 }}
             {{- end }}
           {{- end }}
+          {{- $initMounts := list }}
           {{- if .volumeMounts }}
+            {{- range .volumeMounts }}
+              {{- $initMounts = append $initMounts . }}
+            {{- end }}
+          {{- end }}
+          {{- if and .pvc (default false .pvc.enabled) }}
+            {{- $pvcName := .pvc.name | default (printf "%s-pvc" .name) }}
+            {{- $initMounts = append $initMounts (dict "name" $pvcName "mountPath" (.pvc.mountPath | default "/data") "subPath" .pvc.subPath "readOnly" (default false .pvc.readOnly)) }}
+          {{- end }}
+          {{- if $initMounts }}
           volumeMounts:
-            {{- toYaml .volumeMounts | nindent 12 }}
+            {{- range $initMounts }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              {{- if .subPath }}
+              subPath: {{ .subPath }}
+              {{- end }}
+              {{- if .readOnly }}
+              readOnly: {{ .readOnly }}
+              {{- end }}
+            {{- end }}
           {{- end }}
           {{- if .resources }}
           resources:
@@ -182,6 +201,11 @@ spec:
           {{- range .Values.configMaps }}
             {{- if .mountPath }}
               {{- $mounts = append $mounts (dict "name" .name "mountPath" .mountPath "subPath" .subPath "readOnly" (default true .readOnly)) }}
+            {{- end }}
+          {{- end }}
+          {{- range .Values.persistentVolumeClaims }}
+            {{- if .mountPath }}
+              {{- $mounts = append $mounts (dict "name" .name "mountPath" .mountPath "subPath" .subPath "readOnly" (default false .readOnly)) }}
             {{- end }}
           {{- end }}
           {{- if $mounts }}
@@ -279,9 +303,28 @@ spec:
             - {{- toYaml . | nindent 14 }}
             {{- end }}
           {{- end }}
+          {{- $sidecarMounts := list }}
           {{- if .volumeMounts }}
+            {{- range .volumeMounts }}
+              {{- $sidecarMounts = append $sidecarMounts . }}
+            {{- end }}
+          {{- end }}
+          {{- if and .pvc (default false .pvc.enabled) }}
+            {{- $pvcName := .pvc.name | default (printf "%s-pvc" .name) }}
+            {{- $sidecarMounts = append $sidecarMounts (dict "name" $pvcName "mountPath" (.pvc.mountPath | default "/data") "subPath" .pvc.subPath "readOnly" (default false .pvc.readOnly)) }}
+          {{- end }}
+          {{- if $sidecarMounts }}
           volumeMounts:
-            {{- toYaml .volumeMounts | nindent 12 }}
+            {{- range $sidecarMounts }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              {{- if .subPath }}
+              subPath: {{ .subPath }}
+              {{- end }}
+              {{- if .readOnly }}
+              readOnly: {{ .readOnly }}
+              {{- end }}
+            {{- end }}
           {{- end }}
       {{- end }}
       {{- end }}
@@ -294,6 +337,31 @@ spec:
         {{- if .mountPath }}
           {{- $vols = append $vols (dict "name" .name "configMap" (dict "name" .name "items" .items "defaultMode" .defaultMode)) }}
         {{- end }}
+      {{- end }}
+      {{- range .Values.persistentVolumeClaims }}
+        {{- if .mountPath }}
+          {{- $vols = append $vols (dict "name" .name "persistentVolumeClaim" (dict "claimName" .name)) }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.initContainers }}
+      {{- if and .enabled .containers }}
+      {{- range .containers }}
+      {{- if and .pvc (default false .pvc.enabled) }}
+        {{- $pvcName := .pvc.name | default (printf "%s-pvc" .name) }}
+        {{- $vols = append $vols (dict "name" $pvcName "persistentVolumeClaim" (dict "claimName" $pvcName)) }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- with .Values.extraContainers }}
+      {{- if and .enabled .containers }}
+      {{- range .containers }}
+      {{- if and .pvc (default false .pvc.enabled) }}
+        {{- $pvcName := .pvc.name | default (printf "%s-pvc" .name) }}
+        {{- $vols = append $vols (dict "name" $pvcName "persistentVolumeClaim" (dict "claimName" $pvcName)) }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
       {{- end }}
       {{- if $vols }}
       volumes:
@@ -312,6 +380,9 @@ spec:
             {{- if $vol.configMap.defaultMode }}
             defaultMode: {{ $vol.configMap.defaultMode }}
             {{- end }}
+          {{- else if $vol.persistentVolumeClaim }}
+          persistentVolumeClaim:
+            claimName: {{ $vol.persistentVolumeClaim.claimName }}
           {{- else if $vol.hostPath }}
           hostPath:
             {{- toYaml $vol.hostPath | nindent 12 }}

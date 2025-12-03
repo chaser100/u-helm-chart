@@ -179,6 +179,26 @@ configMaps: {}
 #      app.conf: |
 #        key=value
 
+persistentVolumeClaims: []
+#  - name: data-storage
+#    size: 10Gi
+#    storageClassName: fast-ssd
+#    accessModes:
+#      - ReadWriteOnce
+#    mountPath: /data
+#    readOnly: false
+#    annotations: {}
+#  - name: logs-storage
+#    size: 5Gi
+#    storageClassName: standard
+#    accessModes:
+#      - ReadWriteOnce
+#    mountPath: /var/log
+#    readOnly: false
+#    resources:
+#      requests:
+#        storage: 5Gi
+
 volumes: {}
 #  - name: custom-secret
 #    secret:
@@ -224,6 +244,15 @@ initContainers: {}
 #      volumeMounts:
 #        - name: init-data
 #          mountPath: /mnt/init
+#      pvc:
+#        enabled: true
+#        name: init-migration-pvc
+#        size: 5Gi
+#        storageClassName: fast-ssd
+#        accessModes:
+#          - ReadWriteOnce
+#        mountPath: /data
+#        readOnly: false
 #      securityContext:
 #        runAsNonRoot: true
 #        runAsUser: 1000
@@ -251,6 +280,15 @@ extraContainers: {}
 #      volumeMounts:
 #        - name: my-config
 #          mountPath: /mnt/config
+#      pvc:
+#        enabled: true
+#        name: sidecar-pvc
+#        size: 10Gi
+#        storageClassName: standard
+#        accessModes:
+#          - ReadWriteOnce
+#        mountPath: /var/log
+#        readOnly: false
 
 env: []
 #  - name: ENVIRONMENT
