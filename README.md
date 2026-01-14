@@ -2,7 +2,7 @@
 
 A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
 
-**Chart Version:** 0.2.4
+**Chart Version:** 0.2.5
 
 ## Features
 
@@ -107,7 +107,10 @@ serviceAccount:
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `podSecurityContext` | Security context for the pod | `{}` |
+| `shareProcessNamespace` | Enable process namespace sharing between containers in the pod | `false` |
 | `securityContext` | Security context for the container | `{}` |
+
+**Note:** When `shareProcessNamespace` is set to `true`, containers in the pod can see and signal processes from other containers in the same pod. This is useful for debugging and monitoring scenarios, but should be used with caution as it reduces process isolation.
 
 #### Example
 
@@ -116,6 +119,8 @@ podSecurityContext:
   fsGroup: 2000
   runAsNonRoot: true
   runAsUser: 1000
+
+shareProcessNamespace: true
 
 securityContext:
   capabilities:

@@ -38,6 +38,10 @@ podLabels: {}
 
 podSecurityContext: {}
 
+shareProcessNamespace: false
+# Enable process namespace sharing between containers in the pod
+# When true, containers in the pod can see and signal processes from other containers
+
 securityContext: {}
 #   capabilities:
 #     drop:
