@@ -1,13 +1,13 @@
 # Universal Helm Chart
 
-A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
+A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, Gateway API routes, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
 
-**Chart Version:** 0.2.5
+**Chart Version:** 0.2.6
 
 ## Features
 
 - **Flexible Deployment Configuration** - Deploy applications with customizable replica counts, resource limits, and security contexts
-- **Multiple Ingress Options** - Support for standard ingress, extra ingress, and plain ingress with automatic service creation
+- **Ingress and Gateway API Routing** - Support for standard ingress, extra ingress, plain ingress with automatic service creation, and Gateway API HTTPRoute
 - **Job and CronJob Support** - Run one-time jobs and scheduled cronjobs with full configuration options
 - **Autoscaling** - Horizontal Pod Autoscaler (HPA) support with CPU and memory metrics
 - **Security** - Configurable security contexts, service accounts, and pod security policies
@@ -37,7 +37,7 @@ helm install my-release uni-chart/application
 helm install my-release uni-chart/application -f my-values.yaml
 
 # Installation with specific version
-helm install my-release uni-chart/application --version 0.1.9
+helm install my-release uni-chart/application --version 0.2.6
 ```
 
 ### Upgrade the Chart
@@ -195,6 +195,41 @@ An additional ingress resource with the same structure as the main ingress.
 | `extra.ingress.annotations` | Ingress annotations | `{}` |
 | `extra.ingress.hosts` | List of ingress hosts and paths | See values.yaml |
 | `extra.ingress.tls` | TLS configuration for ingress | `[]` |
+
+### Gateway API Route
+
+Creates a `gateway.networking.k8s.io/v1` `HTTPRoute` resource and automatically routes traffic to the Service created by this chart (`{{ include "application.fullname" . }}` on `service.port`).
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `route.enabled` | Enable HTTPRoute creation | `false` |
+| `route.name` | HTTPRoute name (uses chart fullname if empty) | `""` |
+| `route.labels` | Additional HTTPRoute labels | `{}` |
+| `route.annotations` | HTTPRoute annotations | `{}` |
+| `route.gateway` | Gateway name for `parentRefs` | `""` |
+| `route.gatewayNamespace` | Gateway namespace for `parentRefs` (optional) | `""` |
+| `route.sectionName` | Gateway listener/section name (optional) | `""` |
+| `route.hostname` | Route hostname | `chart-example.local` |
+| `route.path` | Path match value | `/` |
+| `route.pathMatchType` | Path match type | `PathPrefix` |
+| `route.backendWeight` | Backend reference weight | `1` |
+
+`route.gateway` is required when `route.enabled: true`.
+`route` template is rendered only when deployment (and chart service) is enabled (`deploymentDisable: false`).
+
+#### Example
+
+```yaml
+route:
+  enabled: true
+  gateway: internal
+  gatewayNamespace: kgateway-system
+  sectionName: https-internal-wildcard
+  hostname: app.internal.example.com
+  path: /
+  pathMatchType: PathPrefix
+  backendWeight: 1
+```
 
 ### Plain Ingress
 
