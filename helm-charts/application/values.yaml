@@ -70,6 +70,20 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+route:
+  enabled: false
+  # route.gateway is required when enabled=true
+  name: ""
+  annotations: {}
+  labels: {}
+  gateway: ""
+  gatewayNamespace: ""
+  sectionName: ""
+  hostname: chart-example.local
+  path: /
+  pathMatchType: PathPrefix
+  backendWeight: 1
+
 extra:
   ingress:
     enabled: false

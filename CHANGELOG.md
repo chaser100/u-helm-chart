@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.6] - 2026-03-12
+
+### Added
+- Support for Gateway API `HTTPRoute` via new `route` configuration block
+- New template `templates/route.yaml` with backend bound to chart-managed Service (`application.fullname` + `service.port`)
+- Test values scenario for Gateway API route rendering (`tests/values-test-route.yaml`)
+
+### Changed
+- Updated documentation for Gateway API route usage and values
+- Route template now renders only when deployment is enabled to avoid referencing a non-existent chart-managed Service
+
 ## [0.2.5] - 2026-01-14
 
 ### Added
@@ -76,6 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[0.2.6]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.2.6
 [0.2.5]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.2.5
 [0.2.4]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.2.4
 [0.2.3]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.2.3
@@ -83,4 +95,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.2.1]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.2.1
 [0.2.0]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.2.0
 [0.1.9]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.1.9
-
