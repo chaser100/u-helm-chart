@@ -1,0 +1,15 @@
+# Test with Gateway API HTTPRoute
+image: nginx
+imageTag: 1.21
+service:
+  type: ClusterIP
+  port: 8080
+route:
+  enabled: true
+  gateway: internal
+  gatewayNamespace: kgateway-system
+  sectionName: https-internal-wildcard
+  hostname: app.internal.example.com
+  path: /
+  pathMatchType: PathPrefix
+  backendWeight: 1
