@@ -2,7 +2,7 @@
 
 A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, Gateway API routes, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
 
-**Chart Version:** 0.2.6
+**Chart Version:** 0.2.7
 
 ## Features
 
@@ -37,7 +37,7 @@ helm install my-release uni-chart/application
 helm install my-release uni-chart/application -f my-values.yaml
 
 # Installation with specific version
-helm install my-release uni-chart/application --version 0.2.6
+helm install my-release uni-chart/application --version 0.2.7
 ```
 
 ### Upgrade the Chart
