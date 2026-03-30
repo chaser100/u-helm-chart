@@ -322,6 +322,12 @@ envFromSecrets:
   enableEnvFrom: false
   secretName: example-external-secret
 
+envFrom: []
+#  - secretRef:
+#      name: app-secrets
+#  - configMapRef:
+#      name: app-config
+
 envSecrets:
   enableEnv: false
   envs:

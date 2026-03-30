@@ -2,7 +2,7 @@
 
 A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, Gateway API routes, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
 
-**Chart Version:** 0.2.7
+**Chart Version:** 0.2.8
 
 ## Features
 
@@ -37,7 +37,7 @@ helm install my-release uni-chart/application
 helm install my-release uni-chart/application -f my-values.yaml
 
 # Installation with specific version
-helm install my-release uni-chart/application --version 0.2.7
+helm install my-release uni-chart/application --version 0.2.8
 ```
 
 ### Upgrade the Chart
@@ -755,6 +755,7 @@ env:
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `envFrom` | Additional `envFrom` entries for the main container | `[]` |
 | `envFromSecrets.enableEnvFrom` | Enable loading all keys from a secret as env vars | `false` |
 | `envFromSecrets.secretName` | Secret name for envFrom | `""` |
 | `envSecrets.enableEnv` | Enable loading specific keys from secrets | `false` |
@@ -786,6 +787,12 @@ env:
 env:
   - name: ENVIRONMENT
     value: production
+
+envFrom:
+  - configMapRef:
+      name: shared-config
+  - secretRef:
+      name: shared-secrets
 
 envFromSecrets:
   enableEnvFrom: true
