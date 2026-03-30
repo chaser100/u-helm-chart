@@ -177,7 +177,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-configMaps: {}
+configMaps: []
 #  - name: my-config
 #    mountPath: /etc/my-config
 #    readOnly: true
@@ -217,21 +217,21 @@ persistentVolumeClaims: []
 #      requests:
 #        storage: 5Gi
 
-volumes: {}
+volumes: []
 #  - name: custom-secret
 #    secret:
 #      secretName: mysecret
 #      optional: false
 
-volumeMounts: {}
+volumeMounts: []
 #  - name: custom-secret
 #    mountPath: "/etc/custom-secret"
 #    readOnly: true
 
-nodeSelector: []
+nodeSelector: {}
 #  node-role.kubernetes.io/app: ""
 
-tolerations: {}
+tolerations: []
 #  - key: "node-role.kubernetes.io/app"
 #    operator: "Exists"
 #    effect: "NoSchedule"
@@ -330,7 +330,7 @@ envSecrets:
       secretName: example-external-secret
       secretKey: BAR
 
-extraManifests: {}
+extraManifests: []
 #  - apiVersion: external-secrets.io/v1beta1
 #    kind: ExternalSecret
 #    metadata:
