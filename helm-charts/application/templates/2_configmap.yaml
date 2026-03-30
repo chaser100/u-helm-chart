@@ -13,7 +13,7 @@ metadata:
   {{- end }}
 data:
 {{- range $key, $value := .data }}
-  {{ $key }}: |
+  {{ $key }}: |-
 {{ $value | indent 4 }}
 {{- end }}
 {{- end }}
