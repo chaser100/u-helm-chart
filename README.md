@@ -67,7 +67,7 @@ The following table lists the configurable parameters and their default values. 
 | `imagePullSecrets` | List of image pull secrets for private registries | `[]` |
 | `nameOverride` | Override the name of the chart | `""` |
 | `fullnameOverride` | Override the full name of the chart | `""` |
-| `deploymentAnnotations` | Additional annotations for the deployment | `[]` |
+| `deploymentAnnotations` | Additional annotations for the deployment | `{}` |
 | `podAnnotations` | Additional annotations for pods | `{}` |
 | `podLabels` | Additional labels for pods | `{}` |
 
@@ -386,7 +386,8 @@ Mount ConfigMaps as volumes in the pod.
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `configMaps` | List of ConfigMap configurations | `{}` |
+| `configmapAnnotations` | Additional annotations for generated ConfigMaps | `{}` |
+| `configMaps` | List of ConfigMap configurations | `[]` |
 
 Each ConfigMap entry supports:
 
@@ -401,6 +402,9 @@ Each ConfigMap entry supports:
 #### Example
 
 ```yaml
+configmapAnnotations:
+  argocd.argoproj.io/sync-wave: "-10"
+
 configMaps:
   - name: app-config
     mountPath: /etc/app-config

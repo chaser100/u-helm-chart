@@ -1,3 +1,4 @@
+{{- $root := . }}
 {{- range .Values.configMaps }}
 ---
 apiVersion: v1
@@ -5,8 +6,8 @@ kind: ConfigMap
 metadata:
   name: {{ .name }}
   labels:
-    {{- include "application.labels" . | nindent 4 }}
-  {{- with .Values.configmapAnnotations }}
+    {{- include "application.labels" $root | nindent 4 }}
+  {{- with $root.Values.configmapAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
