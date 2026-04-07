@@ -2,7 +2,7 @@
 
 A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, Gateway API routes, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
 
-**Chart Version:** 0.2.8
+**Chart Version:** 0.2.9
 
 ## Features
 
@@ -37,7 +37,7 @@ helm install my-release uni-chart/application
 helm install my-release uni-chart/application -f my-values.yaml
 
 # Installation with specific version
-helm install my-release uni-chart/application --version 0.2.8
+helm install my-release uni-chart/application --version 0.2.9
 ```
 
 ### Upgrade the Chart
@@ -680,6 +680,7 @@ Deploy additional containers alongside the main application container.
 |-----------|-------------|---------|
 | `extraContainers.enabled` | Enable sidecar containers | `false` |
 | `extraContainers.containers` | List of sidecar container definitions | `[]` |
+| `extraContainers.containers[].securityContext` | Security context for a sidecar container | `{}` |
 
 Each sidecar container supports the same parameters as init containers, including individual `pvc` configuration.
 
@@ -702,6 +703,9 @@ extraContainers:
       volumeMounts:
         - name: my-config
           mountPath: /mnt/config
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
       pvc:
         enabled: true
         name: sidecar-pvc

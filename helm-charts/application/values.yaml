@@ -300,6 +300,9 @@ extraContainers: {}
 #      volumeMounts:
 #        - name: my-config
 #          mountPath: /mnt/config
+#      securityContext:
+#        runAsNonRoot: true
+#        runAsUser: 1000
 #      pvc:
 #        enabled: true
 #        name: sidecar-pvc

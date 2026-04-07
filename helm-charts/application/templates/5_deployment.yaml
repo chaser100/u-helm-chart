@@ -248,6 +248,10 @@ spec:
           args:
             {{- toYaml .args | nindent 12 }}
           {{- end }}
+          {{- if .securityContext }}
+          securityContext:
+            {{- toYaml .securityContext | nindent 12 }}
+          {{- end }}
           {{- if .ports }}
           ports:
             {{- toYaml .ports | nindent 12 }}

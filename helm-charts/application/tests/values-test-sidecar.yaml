@@ -11,6 +11,9 @@ extraContainers:
     - name: sidecar
       image: busybox:latest
       command: ["sleep", "3600"]
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
       env:
         - name: SIDECAR_ENV
           value: production
