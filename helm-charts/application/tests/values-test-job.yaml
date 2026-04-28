@@ -5,6 +5,9 @@ imageTag: 1.21
 job:
   enabled: true
   name: migration-job
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/sync-wave: "-50"
   image: postgres:14
   imageTag: latest
   imagePullPolicy: IfNotPresent

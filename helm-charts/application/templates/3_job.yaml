@@ -5,6 +5,10 @@ metadata:
   name: {{ include "application.fullname" . }}-job
   labels:
     {{- include "application.labels" . | nindent 4 }}
+  {{- with .Values.job.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   backoffLimit: {{ .Values.job.backoffLimit | default 1 }}
   template:

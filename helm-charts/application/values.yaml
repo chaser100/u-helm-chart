@@ -102,6 +102,7 @@ extra:
 job:
   enabled: false
   name: my-job
+  annotations: {}
   image: busybox
   imageTag: latest
   imagePullPolicy: IfNotPresent
