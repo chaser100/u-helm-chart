@@ -87,7 +87,9 @@ spec:
           {{- end }}
           {{- $mounts := list }}
           {{- with .Values.volumeMounts }}
-            {{- $mounts = append $mounts . }}
+            {{- range . }}
+              {{- $mounts = append $mounts . }}
+            {{- end }}
           {{- end }}
           {{- range .Values.configMaps }}
           {{- if .mountPath }}
@@ -107,7 +109,9 @@ spec:
           {{- end }}
       {{- $vols := list }}
       {{- with .Values.volumes }}
-        {{- $vols = append $vols . }}
+        {{- range . }}
+          {{- $vols = append $vols . }}
+        {{- end }}
       {{- end }}
       {{- range .Values.configMaps }}
       {{- if .mountPath }}
