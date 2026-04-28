@@ -1,27 +1,47 @@
 {{- if .Values.job.enabled }}
+{{- $jobName := printf "%s-job" (include "application.fullname" .) }}
+{{- if .Values.job.nameOverride }}
+  {{- $jobName = .Values.job.nameOverride }}
+{{- end }}
+{{- if .Values.job.fullnameOverride }}
+  {{- $jobName = .Values.job.fullnameOverride }}
+{{- end }}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "application.fullname" . }}-job
+  name: {{ $jobName | trunc 63 | trimSuffix "-" }}
   labels:
     {{- include "application.labels" . | nindent 4 }}
+    {{- with .Values.job.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.job.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   backoffLimit: {{ .Values.job.backoffLimit | default 1 }}
+  {{- with .Values.job.ttlSecondsAfterFinished }}
+  ttlSecondsAfterFinished: {{ . }}
+  {{- end }}
   template:
     metadata:
       labels:
         {{- include "application.labels" . | nindent 8 }}
+        {{- with .Values.job.extraLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.job.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       restartPolicy: {{ .Values.job.restartPolicy | default "OnFailure" }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "application.serviceAccountName" . }}
+      serviceAccountName: {{ .Values.job.serviceAccountName | default (include "application.serviceAccountName" .) }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -56,6 +76,10 @@ spec:
                 {{- toYaml .valueFrom | nindent 16 }}
               {{- end }}
             {{- end }}
+          {{- end }}
+          {{- with .Values.job.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.job.resources }}
           resources:

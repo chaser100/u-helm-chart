@@ -2,7 +2,7 @@
 
 A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, Gateway API routes, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
 
-**Chart Version:** 0.3.0
+**Chart Version:** 0.3.1
 
 ## Features
 
@@ -37,7 +37,7 @@ helm install my-release uni-chart/application
 helm install my-release uni-chart/application -f my-values.yaml
 
 # Installation with specific version
-helm install my-release uni-chart/application --version 0.3.0
+helm install my-release uni-chart/application --version 0.3.1
 ```
 
 ### Upgrade the Chart
@@ -821,15 +821,22 @@ Run a one-time Kubernetes Job.
 |-----------|-------------|---------|
 | `job.enabled` | Enable the job | `false` |
 | `job.name` | Job name | `my-job` |
+| `job.nameOverride` | Override Job name | `""` |
+| `job.fullnameOverride` | Full override for Job name (highest priority) | `""` |
 | `job.annotations` | Additional annotations for Job metadata | `{}` |
+| `job.podAnnotations` | Additional annotations for Job Pod template metadata | `{}` |
+| `job.extraLabels` | Additional labels for Job and Job Pod template metadata | `{}` |
+| `job.serviceAccountName` | Override service account name for Job Pod | `""` |
 | `job.image` | Container image | `busybox` |
 | `job.imageTag` | Container image tag | `latest` |
 | `job.imagePullPolicy` | Image pull policy | `IfNotPresent` |
 | `job.restartPolicy` | Restart policy | `OnFailure` |
 | `job.backoffLimit` | Number of retries before marking as failed | `2` |
+| `job.ttlSecondsAfterFinished` | Time-to-live for finished Jobs (seconds) | `null` |
 | `job.command` | Container command | `["/bin/sh", "-c"]` |
 | `job.args` | Container arguments | `[]` |
 | `job.env` | Plain environment variables | `[]` |
+| `job.envFrom` | List of `envFrom` sources (`secretRef`/`configMapRef`) | `[]` |
 | `job.envFromSecrets` | Environment variables from secrets | `[]` |
 | `job.resources` | Resource requests and limits | `{}` |
 
@@ -838,17 +845,28 @@ Run a one-time Kubernetes Job.
 ```yaml
 job:
   enabled: true
-  name: migration-job
+  nameOverride: run-migrations
   annotations:
     argocd.argoproj.io/hook: Sync
     argocd.argoproj.io/sync-wave: "-50"
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+  podAnnotations:
+    example.com/pod-annotation: "true"
+  extraLabels:
+    app.kubernetes.io/component: migration
   image: postgres:14
   imageTag: latest
   imagePullPolicy: IfNotPresent
-  restartPolicy: OnFailure
-  backoffLimit: 3
-  command: ["/bin/bash", "-c"]
-  args: ["psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f /migrations/init.sql"]
+  restartPolicy: Never
+  backoffLimit: 10
+  ttlSecondsAfterFinished: 3600
+  serviceAccountName: migration-sa
+  command: ["php", "artisan", "migrate", "--force"]
+  envFrom:
+    - secretRef:
+        name: app-env-secret
+    - configMapRef:
+        name: app-env-config
   env:
     - name: MIGRATION_ENV
       value: production

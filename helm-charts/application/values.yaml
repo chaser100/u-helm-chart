@@ -102,17 +102,28 @@ extra:
 job:
   enabled: false
   name: my-job
+  nameOverride: ""
+  fullnameOverride: ""
   annotations: {}
+  podAnnotations: {}
+  extraLabels: {}
+  serviceAccountName: ""
   image: busybox
   imageTag: latest
   imagePullPolicy: IfNotPresent
   restartPolicy: OnFailure
   backoffLimit: 2
+  ttlSecondsAfterFinished: null
   command: ["/bin/sh", "-c"]
   args: ["echo 'Hello from job'; sleep 10"]
   env: []
   #  - name: JOB_ENV
   #    value: production
+  envFrom: []
+  #  - secretRef:
+  #      name: my-secret
+  #  - configMapRef:
+  #      name: my-config
   envFromSecrets:
     - name: JOB_TOKEN
       secretName: example-external-secret

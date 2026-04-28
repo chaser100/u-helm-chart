@@ -5,16 +5,29 @@ imageTag: 1.21
 job:
   enabled: true
   name: migration-job
+  nameOverride: run-migrations
   annotations:
     argocd.argoproj.io/hook: Sync
     argocd.argoproj.io/sync-wave: "-50"
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+  podAnnotations:
+    example.com/pod-annotation: "true"
+  extraLabels:
+    app.kubernetes.io/component: migration
   image: postgres:14
   imageTag: latest
   imagePullPolicy: IfNotPresent
-  restartPolicy: OnFailure
+  restartPolicy: Never
   backoffLimit: 3
+  ttlSecondsAfterFinished: 3600
+  serviceAccountName: migration-sa
   command: ["/bin/bash", "-c"]
   args: ["psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f /migrations/init.sql"]
+  envFrom:
+    - secretRef:
+        name: app-env-secret
+    - configMapRef:
+        name: app-env-config
   env:
     - name: MIGRATION_ENV
       value: production
