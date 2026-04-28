@@ -60,6 +60,16 @@ spec:
               {{- $jobEnvVars = append $jobEnvVars . }}
             {{- end }}
           {{- end }}
+          {{- if .Values.env }}
+            {{- range .Values.env }}
+              {{- $jobEnvVars = append $jobEnvVars . }}
+            {{- end }}
+          {{- end }}
+          {{- if and .Values.envSecrets .Values.envSecrets.enableEnv }}
+            {{- range .Values.envSecrets.envs }}
+              {{- $jobEnvVars = append $jobEnvVars (dict "name" .name "valueFrom" (dict "secretKeyRef" (dict "name" .secretName "key" .secretKey))) }}
+            {{- end }}
+          {{- end }}
           {{- with .Values.job.envFromSecrets }}
             {{- range . }}
               {{- $jobEnvVars = append $jobEnvVars (dict "name" .name "valueFrom" (dict "secretKeyRef" (dict "name" .secretName "key" .secretKey))) }}
@@ -77,9 +87,20 @@ spec:
               {{- end }}
             {{- end }}
           {{- end }}
+          {{- $jobEnvFromList := list }}
+          {{- if and .Values.envFromSecrets .Values.envFromSecrets.enableEnvFrom }}
+            {{- $jobEnvFromList = append $jobEnvFromList (dict "secretRef" (dict "name" .Values.envFromSecrets.secretName)) }}
+          {{- end }}
           {{- with .Values.job.envFrom }}
+            {{- range . }}
+              {{- $jobEnvFromList = append $jobEnvFromList . }}
+            {{- end }}
+          {{- end }}
+          {{- if $jobEnvFromList }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
+            {{- range $jobEnvFrom := $jobEnvFromList }}
+            - {{- toYaml $jobEnvFrom | nindent 14 }}
+            {{- end }}
           {{- end }}
           {{- with .Values.job.resources }}
           resources:

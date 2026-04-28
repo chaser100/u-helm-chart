@@ -115,7 +115,12 @@ job:
   backoffLimit: 2
   ttlSecondsAfterFinished: null
   command: ["/bin/sh", "-c"]
-  args: ["echo 'Hello from job'; sleep 10"]
+  args: []
+  # Job inherits base application env by default:
+  # - .Values.env
+  # - .Values.envFromSecrets (when enableEnvFrom=true)
+  # - .Values.envSecrets.envs (when enableEnv=true)
+  # Use job.env and job.envFrom for additional/override values.
   env: []
   #  - name: JOB_ENV
   #    value: production
@@ -124,10 +129,10 @@ job:
   #      name: my-secret
   #  - configMapRef:
   #      name: my-config
-  envFromSecrets:
-    - name: JOB_TOKEN
-      secretName: example-external-secret
-      secretKey: JOB_TOKEN
+  envFromSecrets: []
+  #  - name: JOB_TOKEN
+  #    secretName: my-job-secret
+  #    secretKey: JOB_TOKEN
   resources:
     requests:
       cpu: 100m
