@@ -108,8 +108,8 @@ job:
   podAnnotations: {}
   extraLabels: {}
   serviceAccountName: ""
-  image: busybox
-  imageTag: latest
+  image: ""
+  imageTag: ""
   imagePullPolicy: IfNotPresent
   restartPolicy: OnFailure
   backoffLimit: 2
