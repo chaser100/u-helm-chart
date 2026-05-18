@@ -207,6 +207,10 @@ spec:
           livenessProbe:
             {{- toYaml .Values.livenessProbe | trim | nindent 12 }}
           {{- end }}
+          {{- with .Values.lifecycle }}
+          lifecycle:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- $mounts := list }}
           {{- range .Values.volumeMounts }}
             {{- $mounts = append $mounts . }}

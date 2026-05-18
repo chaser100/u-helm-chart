@@ -186,6 +186,19 @@ readinessProbe: {}
 #  httpGet:
 #    path: /
 #    port: http
+lifecycle: {}
+#  postStart:
+#    exec:
+#      command:
+#        - /bin/sh
+#        - -c
+#        - echo postStart
+#  preStop:
+#    exec:
+#      command:
+#        - /bin/sh
+#        - -c
+#        - echo preStop
 
 autoscaling:
   enabled: false

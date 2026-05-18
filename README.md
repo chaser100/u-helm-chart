@@ -2,7 +2,7 @@
 
 A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, Gateway API routes, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
 
-**Chart Version:** 0.3.1
+**Chart Version:** 0.3.2
 
 ## Features
 
@@ -15,6 +15,7 @@ A comprehensive and flexible Helm chart for deploying applications to Kubernetes
 - **Sidecar Containers** - Deploy additional containers alongside your main application
 - **Custom Manifests** - Inject raw Kubernetes manifests for advanced use cases
 - **Environment Variables** - Flexible configuration for environment variables (plain values, secrets, and envFrom)
+- **Lifecycle Hooks** - Optional `postStart` and `preStop` container lifecycle hooks for deployment
 
 ## Installation
 
@@ -37,7 +38,7 @@ helm install my-release uni-chart/application
 helm install my-release uni-chart/application -f my-values.yaml
 
 # Installation with specific version
-helm install my-release uni-chart/application --version 0.3.1
+helm install my-release uni-chart/application --version 0.3.2
 ```
 
 ### Upgrade the Chart
@@ -308,6 +309,7 @@ ingressPlain:
 | `livenessProbe` | Liveness probe configuration | `{}` |
 | `readinessProbe` | Readiness probe configuration | `{}` |
 | `startupProbe` | Startup probe configuration | `{}` |
+| `lifecycle` | Container lifecycle hooks (`postStart`, `preStop`) | `{}` |
 
 #### Example
 
@@ -338,6 +340,20 @@ startupProbe:
   periodSeconds: 10
   timeoutSeconds: 5
   failureThreshold: 30
+
+lifecycle:
+  postStart:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - echo postStart
+  preStop:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - echo preStop
 ```
 
 ### Autoscaling
