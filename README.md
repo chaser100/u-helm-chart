@@ -2,7 +2,7 @@
 
 A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, Gateway API routes, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
 
-**Chart Version:** 0.3.2
+**Chart Version:** 0.3.3
 
 ## Features
 
@@ -38,7 +38,7 @@ helm install my-release uni-chart/application
 helm install my-release uni-chart/application -f my-values.yaml
 
 # Installation with specific version
-helm install my-release uni-chart/application --version 0.3.2
+helm install my-release uni-chart/application --version 0.3.3
 ```
 
 ### Upgrade the Chart
@@ -91,6 +91,7 @@ imagePullSecrets:
 | `serviceAccount.automount` | Automatically mount the service account token | `true` |
 | `serviceAccount.annotations` | Additional annotations for the service account | `{}` |
 | `serviceAccount.name` | Name of the service account (if not set, uses fullname) | `""` |
+| `job.serviceAccountAnnotations` | Extra ServiceAccount annotations applied when `job.enabled=true` (merged with `serviceAccount.annotations`) | `{}` |
 
 #### Example
 
@@ -843,6 +844,7 @@ Run a one-time Kubernetes Job.
 | `job.podAnnotations` | Additional annotations for Job Pod template metadata | `{}` |
 | `job.extraLabels` | Additional labels for Job and Job Pod template metadata | `{}` |
 | `job.serviceAccountName` | Override service account name for Job Pod | `""` |
+| `job.serviceAccountAnnotations` | Additional annotations for chart-created ServiceAccount when Job is enabled | `{}` |
 | `job.image` | Container image | `busybox` |
 | `job.imageTag` | Container image tag | `latest` |
 | `job.imagePullPolicy` | Image pull policy | `IfNotPresent` |
@@ -877,6 +879,9 @@ job:
   backoffLimit: 10
   ttlSecondsAfterFinished: 3600
   serviceAccountName: migration-sa
+  serviceAccountAnnotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/sync-wave: "-50"
   command: ["php", "artisan", "migrate", "--force"]
   envFrom:
     - secretRef:

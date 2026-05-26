@@ -2,6 +2,8 @@
 replicaCount: 1
 image: nginx
 imageTag: 1.21
+serviceAccount:
+  name: migration-sa
 job:
   enabled: true
   name: migration-job
@@ -21,6 +23,9 @@ job:
   backoffLimit: 3
   ttlSecondsAfterFinished: 3600
   serviceAccountName: migration-sa
+  serviceAccountAnnotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/sync-wave: "-50"
   command: ["/bin/bash", "-c"]
   args: ["psql -h $DB_HOST -U $DB_USER -d $DB_NAME -f /migrations/init.sql"]
   envFrom:
