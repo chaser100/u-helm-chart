@@ -216,6 +216,8 @@ Creates a `gateway.networking.k8s.io/v1` `HTTPRoute` resource and automatically 
 | `route.path` | Path match value | `/` |
 | `route.pathMatchType` | Path match type | `PathPrefix` |
 | `route.backendWeight` | Backend reference weight | `1` |
+| `route.timeouts.request` | Maximum end-to-end request duration (Gateway API Duration) | not set |
+| `route.timeouts.backendRequest` | Maximum gateway-to-backend request duration (Gateway API Duration) | not set |
 
 `route.gateway` is required when `route.enabled: true`.
 `route` template is rendered only when deployment (and chart service) is enabled (`deploymentDisable: false`).
@@ -232,6 +234,9 @@ route:
   path: /
   pathMatchType: PathPrefix
   backendWeight: 1
+  timeouts:
+    request: 75s
+    backendRequest: 75s
 ```
 
 ### Plain Ingress

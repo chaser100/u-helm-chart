@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `extraDeployments` values block for managing additional Deployment resources directly from chart values
 - Optional inheritance for `extraDeployments[].image`, `extraDeployments[].imageTag`, and `extraDeployments[].imagePullPolicy` from main deployment values
 - Optional `extraDeployments[].inheritEnv` flag to inherit app-level `env`/`envFrom` context only when explicitly enabled
+- Optional `route.timeouts.request` and `route.timeouts.backendRequest` support for HTTPRoute rules
 - Test scenario for `extraDeployments` rendering and imageTag inheritance/override
 
 ### Changed

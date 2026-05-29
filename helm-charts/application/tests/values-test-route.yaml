@@ -13,3 +13,6 @@ route:
   path: /
   pathMatchType: PathPrefix
   backendWeight: 1
+  timeouts:
+    request: 75s
+    backendRequest: 75s
