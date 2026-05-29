@@ -3,6 +3,15 @@ replicaCount: 1
 image: registry.example.com/php-app
 imageTag: prod-100
 imagePullPolicy: IfNotPresent
+env:
+  - name: APP_ENV
+    value: production
+envFromSecrets:
+  enableEnvFrom: true
+  secretName: app-shared-secret
+envFrom:
+  - configMapRef:
+      name: app-global-config
 service:
   type: ClusterIP
   port: 8080
@@ -10,6 +19,7 @@ service:
 extraDeployments:
   - name: app-scheduler
     replicas: 1
+    inheritEnv: true
     annotations:
       reloader.stakater.com/auto: "true"
     selector:

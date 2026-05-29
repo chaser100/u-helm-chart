@@ -1028,6 +1028,7 @@ Define additional Deployment resources directly from values, with optional inher
 | `extraDeployments[].image` | Container image (falls back to `.Values.image`) | `""` |
 | `extraDeployments[].imageTag` | Container tag (falls back to `.Values.imageTag`) | `""` |
 | `extraDeployments[].imagePullPolicy` | Pull policy (falls back to `.Values.imagePullPolicy`) | `""` |
+| `extraDeployments[].inheritEnv` | When `true`, inherit app-level env/envFrom settings (`env`, `envFrom`, `envSecrets`, `envFromSecrets`) | `false` |
 | `extraDeployments[].command` | Container command | `[]` |
 | `extraDeployments[].args` | Container args | `[]` |
 | `extraDeployments[].env` | Container env list | `[]` |
@@ -1043,6 +1044,7 @@ imageTag: prod-793
 extraDeployments:
   - name: app-scheduler
     replicas: 1
+    inheritEnv: true
     selector:
       matchLabels:
         app: app-scheduler

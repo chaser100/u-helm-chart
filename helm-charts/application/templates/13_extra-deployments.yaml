@@ -65,13 +65,47 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with $dep.env }}
+          {{- $depEnvVars := list }}
+          {{- if $dep.env }}
+            {{- range $dep.env }}
+              {{- $depEnvVars = append $depEnvVars . }}
+            {{- end }}
+          {{- end }}
+          {{- if $dep.inheritEnv }}
+            {{- if $.Values.env }}
+              {{- range $.Values.env }}
+                {{- $depEnvVars = append $depEnvVars . }}
+              {{- end }}
+            {{- end }}
+            {{- if and $.Values.envSecrets $.Values.envSecrets.enableEnv }}
+              {{- range $.Values.envSecrets.envs }}
+                {{- $depEnvVars = append $depEnvVars (dict "name" .name "valueFrom" (dict "secretKeyRef" (dict "name" .secretName "key" .secretKey))) }}
+              {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- if $depEnvVars }}
           env:
-            {{- toYaml . | nindent 12 }}
+            {{- toYaml $depEnvVars | nindent 12 }}
+          {{- end }}
+          {{- $depEnvFromList := list }}
+          {{- if $dep.inheritEnv }}
+            {{- if and $.Values.envFromSecrets $.Values.envFromSecrets.enableEnvFrom }}
+              {{- $depEnvFromList = append $depEnvFromList (dict "secretRef" (dict "name" $.Values.envFromSecrets.secretName)) }}
+            {{- end }}
+            {{- if $.Values.envFrom }}
+              {{- range $.Values.envFrom }}
+                {{- $depEnvFromList = append $depEnvFromList . }}
+              {{- end }}
+            {{- end }}
           {{- end }}
           {{- with $dep.envFrom }}
+            {{- range . }}
+              {{- $depEnvFromList = append $depEnvFromList . }}
+            {{- end }}
+          {{- end }}
+          {{- if $depEnvFromList }}
           envFrom:
-            {{- toYaml . | nindent 12 }}
+            {{- toYaml $depEnvFromList | nindent 12 }}
           {{- end }}
           {{- with $dep.ports }}
           ports:

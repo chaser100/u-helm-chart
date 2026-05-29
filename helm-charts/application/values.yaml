@@ -418,6 +418,7 @@ extraDeployments: []
 #    image: "" # optional, defaults to .Values.image
 #    imageTag: "" # optional, defaults to .Values.imageTag
 #    imagePullPolicy: "" # optional, defaults to .Values.imagePullPolicy
+#    inheritEnv: false # when true, inherit .Values.env/.Values.envFrom/.Values.envSecrets/.Values.envFromSecrets
 #    command: ["php", "artisan", "queue:work", "--queue=default"]
 #    envFrom:
 #      - secretRef:
