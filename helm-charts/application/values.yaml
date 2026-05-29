@@ -397,6 +397,39 @@ extraManifests: []
 #            key: path/keys
 #            property: BAR
 
+extraDeployments: []
+#  - name: app-worker-default
+#    replicas: 1
+#    annotations:
+#      reloader.stakater.com/auto: "true"
+#    selector:
+#      matchLabels:
+#        app: app-worker-default
+#    template:
+#      labels:
+#        app: app-worker-default
+#    nodeSelector:
+#      role: production
+#    tolerations:
+#      - key: workload.example.com/production
+#        operator: Equal
+#        value: "true"
+#        effect: NoSchedule
+#    image: "" # optional, defaults to .Values.image
+#    imageTag: "" # optional, defaults to .Values.imageTag
+#    imagePullPolicy: "" # optional, defaults to .Values.imagePullPolicy
+#    command: ["php", "artisan", "queue:work", "--queue=default"]
+#    envFrom:
+#      - secretRef:
+#          name: app-config
+#    resources:
+#      requests:
+#        cpu: 1000m
+#        memory: 1Gi
+#      limits:
+#        cpu: 1000m
+#        memory: 1Gi
+
 ingressPlain:
   enabled: false
 

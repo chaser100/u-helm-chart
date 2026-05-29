@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.4] - 2026-05-29
+
+### Added
+- New `extraDeployments` values block for managing additional Deployment resources directly from chart values
+- Optional inheritance for `extraDeployments[].image`, `extraDeployments[].imageTag`, and `extraDeployments[].imagePullPolicy` from main deployment values
+- Test scenario for `extraDeployments` rendering and imageTag inheritance/override
+
+### Changed
+- Updated README with `extraDeployments` documentation and usage examples
+
 ## [0.3.3] - 2026-05-26
 
 ### Added
@@ -140,6 +150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[0.3.4]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.4
 [0.3.3]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.3
 [0.3.2]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.2
 [0.3.1]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.1

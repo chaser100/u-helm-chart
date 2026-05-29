@@ -2,7 +2,7 @@
 
 A comprehensive and flexible Helm chart for deploying applications to Kubernetes. This chart provides a universal template that supports a wide range of deployment scenarios including deployments, services, ingress, Gateway API routes, jobs, cronjobs, and advanced features like autoscaling, sidecar containers, and custom manifests.
 
-**Chart Version:** 0.3.3
+**Chart Version:** 0.3.4
 
 ## Features
 
@@ -14,6 +14,7 @@ A comprehensive and flexible Helm chart for deploying applications to Kubernetes
 - **Volume Management** - Support for ConfigMaps, Secrets, and PersistentVolumeClaims
 - **Sidecar Containers** - Deploy additional containers alongside your main application
 - **Custom Manifests** - Inject raw Kubernetes manifests for advanced use cases
+- **Extra Deployments** - Define additional Deployment resources with optional image/imageTag inheritance from the main deployment
 - **Environment Variables** - Flexible configuration for environment variables (plain values, secrets, and envFrom)
 - **Lifecycle Hooks** - Optional `postStart` and `preStop` container lifecycle hooks for deployment
 
@@ -38,7 +39,7 @@ helm install my-release uni-chart/application
 helm install my-release uni-chart/application -f my-values.yaml
 
 # Installation with specific version
-helm install my-release uni-chart/application --version 0.3.3
+helm install my-release uni-chart/application --version 0.3.4
 ```
 
 ### Upgrade the Chart
@@ -1013,6 +1014,57 @@ extraManifests:
 - `helm.sh/hook: pre-install,pre-upgrade` - Ensures creation before deployment
 - `helm.sh/hook-weight: "-5"` - Sets execution order (negative weight means earlier execution)
 - `helm.sh/hook-delete-policy: before-hook-creation` - Cleans up old resources before creating new ones
+
+### Extra Deployments
+
+Define additional Deployment resources directly from values, with optional inheritance of `image`, `imageTag`, and `imagePullPolicy` from the main deployment.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `extraDeployments` | List of additional deployment definitions | `[]` |
+| `extraDeployments[].name` | Deployment name | required |
+| `extraDeployments[].selector.matchLabels` | Deployment selector labels | required |
+| `extraDeployments[].template.labels` | Pod template labels | required |
+| `extraDeployments[].image` | Container image (falls back to `.Values.image`) | `""` |
+| `extraDeployments[].imageTag` | Container tag (falls back to `.Values.imageTag`) | `""` |
+| `extraDeployments[].imagePullPolicy` | Pull policy (falls back to `.Values.imagePullPolicy`) | `""` |
+| `extraDeployments[].command` | Container command | `[]` |
+| `extraDeployments[].args` | Container args | `[]` |
+| `extraDeployments[].env` | Container env list | `[]` |
+| `extraDeployments[].envFrom` | Container envFrom list | `[]` |
+| `extraDeployments[].resources` | Container resources | `{}` |
+
+#### Example
+
+```yaml
+image: registry.example.com/php-app
+imageTag: prod-793
+
+extraDeployments:
+  - name: app-scheduler
+    replicas: 1
+    selector:
+      matchLabels:
+        app: app-scheduler
+    template:
+      labels:
+        app: app-scheduler
+    command: ["php", "artisan", "schedule:work", "--whisper"]
+    envFrom:
+      - secretRef:
+          name: app-config
+
+  - name: app-worker-default
+    replicas: 1
+    selector:
+      matchLabels:
+        app: app-worker-default
+    template:
+      labels:
+        app: app-worker-default
+    imageTag: prod-794 # override only for this deployment
+    command: ["php", "artisan", "queue:work", "--queue=default"]
+```
 
 ## Usage Examples
 

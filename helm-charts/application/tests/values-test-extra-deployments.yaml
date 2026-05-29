@@ -1,0 +1,42 @@
+# Test with extraDeployments and image/imageTag inheritance
+replicaCount: 1
+image: registry.example.com/php-app
+imageTag: prod-100
+imagePullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 8080
+
+extraDeployments:
+  - name: app-scheduler
+    replicas: 1
+    annotations:
+      reloader.stakater.com/auto: "true"
+    selector:
+      matchLabels:
+        app: app-scheduler
+    template:
+      labels:
+        app: app-scheduler
+    command: ["php", "artisan", "schedule:work", "--whisper"]
+    envFrom:
+      - secretRef:
+          name: app-config
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+
+  - name: app-worker-default
+    replicas: 1
+    selector:
+      matchLabels:
+        app: app-worker-default
+    template:
+      labels:
+        app: app-worker-default
+    imageTag: prod-101
+    command: ["php", "artisan", "queue:work", "--queue=default"]
