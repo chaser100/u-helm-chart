@@ -1,8 +1,16 @@
 apiVersion: v2
 name: application
-description: A Helm chart for Kubernetes
+description: Universal Helm chart for deploying applications to Kubernetes
 keywords:
-  - Universal Helm chart
+  - universal-helm-chart
+  - reusable-helm-chart
+  - generic-helm-chart
+  - application-helm-chart
+  - kubernetes
+  - helm
+  - gitops
+  - argocd
+  - gateway-api
 
 type: application
 
