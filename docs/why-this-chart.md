@@ -13,3 +13,12 @@ Use this chart when you want to:
 - Support both simple web services and advanced Kubernetes workloads
 
 This chart is designed for application teams that need a practical reusable Helm chart, not a framework that hides Kubernetes. You still configure standard Kubernetes concepts directly, but you avoid duplicating the same Helm templates in every repository.
+
+## When Not to Use This Chart
+
+This chart may not be the best choice when:
+
+- An application requires highly specialized Kubernetes resources
+- Application teams need complete control over Helm templates
+- The deployment model differs significantly from the supported values
+- A dedicated application chart provides clearer ownership and maintenance boundaries

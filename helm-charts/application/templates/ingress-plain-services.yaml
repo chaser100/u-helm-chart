@@ -7,7 +7,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ default $p.backend.service.name (default (printf "%s-plain-%d-%d-svc" (include "application.fullname" $root) $idx (randAlphaNum 3 | lower)) $p.service.name) }}
+  name: {{ default $p.backend.service.name $p.service.name }}
   labels:
     {{- include "application.labels" $root | nindent 4 }}
     {{- with $p.service.labels }}
