@@ -1,6 +1,12 @@
 apiVersion: v2
 name: application
 description: Universal Helm chart for deploying applications to Kubernetes
+
+home: https://helm.networkcat89.com
+
+sources:
+  - https://github.com/chaser100/u-helm-chart
+
 keywords:
   - universal-helm-chart
   - reusable-helm-chart
@@ -11,10 +17,13 @@ keywords:
   - gitops
   - argocd
   - gateway-api
+  - prometheus
+  - service-monitor
+  - observability
 
 type: application
 
-version: 0.3.5
+version: 0.3.6
 
 appVersion: "0.1.6"
 

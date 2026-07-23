@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.6] - 2026-07-23
+
+### Added
+- Optional Prometheus Operator `ServiceMonitor` support via the new `serviceMonitor` values block
+- Tested ServiceMonitor values example with configurable labels and scrape endpoints
+
+### Changed
+- Updated README and configuration documentation with ServiceMonitor requirements and usage
+
+## [0.3.5] - 2026-07-22
+
+### Added
+- GitHub Actions workflow that lints the chart and renders every tested values example
+- Dedicated chart positioning and usage guidance in the project documentation
+
+### Changed
+- Restructured and shortened README with tested examples, requirements, idempotent installation, and executable troubleshooting commands
+
+### Fixed
+- Fixed automatically created Plain Ingress Service names to use `service.name` or `backend.service.name`, avoiding invalid generated names and keeping Ingress backend references consistent
+
 ## [0.3.4] - 2026-05-29
 
 ### Added
@@ -152,6 +173,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[0.3.6]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.6
+[0.3.5]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.5
 [0.3.4]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.4
 [0.3.3]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.3
 [0.3.2]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.2

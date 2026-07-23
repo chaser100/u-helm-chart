@@ -5,11 +5,19 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-compatible-blue)](https://kubernetes.io/)
 
+🌐 **Website:** https://helm.networkcat89.com
+
+📖 **Documentation:** https://helm.networkcat89.com/docs
+
+🎮 **Playground:** https://helm.networkcat89.com/playground
+
+⭐ **Examples:** https://helm.networkcat89.com/examples
+
 A reusable, production-ready universal Helm chart for deploying applications to Kubernetes.
 
 Universal Helm Chart is a generic Helm chart and reusable application Helm chart for Kubernetes. Deploy different containerized applications with one configurable chart instead of maintaining a separate chart for every service.
 
-It supports Deployments, Services, Ingress, Gateway API HTTPRoutes, Jobs, CronJobs, autoscaling, ConfigMaps, Secrets, persistent volumes, init containers, sidecars, custom Kubernetes manifests, and more.
+It supports Deployments, Services, Ingress, Gateway API HTTPRoutes, Prometheus Operator ServiceMonitors, Jobs, CronJobs, autoscaling, ConfigMaps, Secrets, persistent volumes, init containers, sidecars, custom Kubernetes manifests, and more.
 
 ## Quick Start
 
@@ -44,6 +52,7 @@ The [`tests/` directory](helm-charts/application/tests/) contains tested, ready-
 - [Basic application](helm-charts/application/tests/values-test-basic.yaml)
 - [Ingress](helm-charts/application/tests/values-test-ingress.yaml) and [plain Ingress](helm-charts/application/tests/values-test-ingress-plain.yaml)
 - [Gateway API HTTPRoute](helm-charts/application/tests/values-test-route.yaml)
+- [Prometheus Operator ServiceMonitor](helm-charts/application/tests/values-test-servicemonitor.yaml)
 - [Jobs](helm-charts/application/tests/values-test-job.yaml) and [CronJobs](helm-charts/application/tests/values-test-cronjob.yaml)
 - [Storage and full configuration](helm-charts/application/tests/values-test-full.yaml)
 - [Sidecars](helm-charts/application/tests/values-test-sidecar.yaml)
@@ -67,6 +76,7 @@ See all tested configurations in [`helm-charts/application/tests/`](helm-charts/
 
 - **Flexible deployments** - Configure replicas, commands, probes, resources, lifecycle hooks, and scheduling
 - **Ingress and Gateway API** - Support standard Ingress, extra Ingress, plain Ingress, and Gateway API HTTPRoute
+- **Prometheus monitoring** - Optionally create a Prometheus Operator ServiceMonitor for the chart-managed Service
 - **Jobs and CronJobs** - Run one-time and scheduled workloads with dedicated configuration
 - **Autoscaling** - Scale Deployments with `autoscaling/v2` HorizontalPodAutoscaler resources
 - **Security configuration** - Configure security contexts, service accounts, and Pod Security Standards-compatible settings
@@ -80,8 +90,9 @@ See all tested configurations in [`helm-charts/application/tests/`](helm-charts/
 - Helm 3
 - Kubernetes 1.23+ for the complete built-in API set used by the chart, including `autoscaling/v2`
 - Gateway API CRDs and a compatible Gateway controller when `route.enabled=true`
+- Prometheus Operator ServiceMonitor CRD when `serviceMonitor.enabled=true`
 
-Gateway API CRDs are not installed by this chart. Install and manage them separately before enabling HTTPRoute resources.
+Gateway API and Prometheus Operator CRDs are not installed by this chart. Install and manage the required CRDs separately before enabling HTTPRoute or ServiceMonitor resources.
 
 ## Installation
 
