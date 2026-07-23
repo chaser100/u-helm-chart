@@ -1,0 +1,17 @@
+# Test with Prometheus Operator ServiceMonitor
+image: nginx
+imageTag: 1.21
+
+service:
+  name: http
+  port: 9113
+
+serviceMonitor:
+  enabled: true
+  labels:
+    release: kube-prometheus-stack
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

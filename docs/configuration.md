@@ -96,6 +96,43 @@ service:
   protocol: TCP
 ```
 
+## ServiceMonitor
+
+Creates an optional `monitoring.coreos.com/v1` `ServiceMonitor` for the Service managed by this chart. It is disabled by default and does not require the Prometheus Operator CRDs unless `serviceMonitor.enabled=true`.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `serviceMonitor.enabled` | Create a ServiceMonitor resource | `false` |
+| `serviceMonitor.name` | Override the ServiceMonitor name | `""` |
+| `serviceMonitor.namespace` | Override the ServiceMonitor namespace; the chart release namespace is selected automatically | `""` |
+| `serviceMonitor.labels` | Additional labels, including labels used by Prometheus selectors | `{}` |
+| `serviceMonitor.annotations` | Additional ServiceMonitor annotations | `{}` |
+| `serviceMonitor.selector` | Override the Service selector; chart Service labels are used when empty | `{}` |
+| `serviceMonitor.namespaceSelector` | Select Services from other namespaces | `{}` |
+| `serviceMonitor.endpoints` | Prometheus Operator endpoint definitions | See `values.yaml` |
+
+Each endpoint references a named Service port. The default endpoint uses the chart Service port named `http` and scrapes `/metrics` every 30 seconds.
+
+### Example
+
+```yaml
+service:
+  name: http
+  port: 9113
+
+serviceMonitor:
+  enabled: true
+  labels:
+    release: kube-prometheus-stack
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+```
+
+The Prometheus Operator and its `ServiceMonitor` CRD must be installed separately before enabling this feature.
+
 ## Ingress
 
 | Parameter | Description | Default |
