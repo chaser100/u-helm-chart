@@ -4,6 +4,8 @@ description: Universal Helm chart for deploying applications to Kubernetes
 
 home: https://helm.networkcat89.com
 
+icon: https://helm.networkcat89.com/favicon.svg
+
 sources:
   - https://github.com/chaser100/u-helm-chart
 
@@ -23,7 +25,11 @@ keywords:
 
 type: application
 
-version: 0.3.6
+version: 0.3.7
+
+annotations:
+  artifacthub.io/displayName: Universal Helm Chart
+  artifacthub.io/license: MIT
 
 appVersion: "0.1.6"
 
