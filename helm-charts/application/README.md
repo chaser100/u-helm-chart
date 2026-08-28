@@ -71,6 +71,20 @@ helm upgrade --install my-app universal/application \
 
 ## Common Use Cases
 
+### Deployment Strategy
+
+The chart uses the Kubernetes default rollout behavior unless `deploymentStrategy` is set.
+
+```yaml
+deploymentStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 1
+```
+
+Use `type: Recreate` for workloads that cannot run old and new Pods at the same time.
+
 ### Gateway API HTTPRoute
 
 ```yaml
@@ -165,6 +179,7 @@ serviceMonitor:
 ## Tested Configurations
 
 - [Basic application](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-basic.yaml)
+- [Deployment strategy](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-deployment-strategy.yaml)
 - [Ingress](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-ingress.yaml)
 - [Plain Ingress](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-ingress-plain.yaml)
 - [Gateway API HTTPRoute](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-route.yaml)

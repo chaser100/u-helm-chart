@@ -100,6 +100,37 @@
       "additionalProperties": true,
       "default": {}
     },
+    "deploymentStrategy": {
+      "description": "Kubernetes Deployment update strategy. Leave empty to use Kubernetes defaults.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "description": "Deployment strategy type.",
+          "type": "string",
+          "enum": [
+            "RollingUpdate",
+            "Recreate"
+          ]
+        },
+        "rollingUpdate": {
+          "description": "Rolling update parameters used when type is RollingUpdate.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "maxUnavailable": {
+              "description": "Maximum unavailable Pods as an integer or percentage.",
+              "$ref": "#/definitions/intOrPercentage"
+            },
+            "maxSurge": {
+              "description": "Maximum additional Pods as an integer or percentage.",
+              "$ref": "#/definitions/intOrPercentage"
+            }
+          }
+        }
+      },
+      "default": {}
+    },
     "podAnnotations": {
       "description": "Annotations added to Pods.",
       "type": "object",
@@ -589,6 +620,18 @@
     }
   },
   "definitions": {
+    "intOrPercentage": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9]+%$"
+        }
+      ]
+    },
     "stringOrNumber": {
       "oneOf": [
         {

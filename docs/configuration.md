@@ -14,6 +14,7 @@ The following table lists the configurable parameters and their default values. 
 | `nameOverride` | Override the name of the chart | `""` |
 | `fullnameOverride` | Override the full name of the chart | `""` |
 | `deploymentAnnotations` | Additional annotations for the deployment | `{}` |
+| `deploymentStrategy` | Kubernetes Deployment update strategy | `{}` |
 | `podAnnotations` | Additional annotations for pods | `{}` |
 | `podLabels` | Additional labels for pods | `{}` |
 
@@ -27,6 +28,29 @@ imagePullPolicy: IfNotPresent
 imagePullSecrets:
   - name: regcred
 ```
+
+## Deployment Strategy
+
+By default, the chart omits `spec.strategy` and lets Kubernetes apply its default `RollingUpdate` behavior. Set `deploymentStrategy` when you need explicit rollout settings or the `Recreate` strategy.
+
+### RollingUpdate Example
+
+```yaml
+deploymentStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 1
+```
+
+### Recreate Example
+
+```yaml
+deploymentStrategy:
+  type: Recreate
+```
+
+Do not set `rollingUpdate` when `type: Recreate`.
 
 ## Service Account
 
