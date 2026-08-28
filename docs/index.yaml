@@ -6,7 +6,40 @@ entries:
       artifacthub.io/license: MIT
     apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.767665271+03:00"
+    created: "2026-08-28T14:57:06.814075043+03:00"
+    description: Universal Helm chart for deploying applications to Kubernetes
+    digest: 28c9b83f74c83b2eceb2d795a21cd1ec862facc384525b9ba81452501d3f8c3f
+    home: https://helm.networkcat89.com
+    icon: https://helm.networkcat89.com/favicon.svg
+    keywords:
+    - universal-helm-chart
+    - reusable-helm-chart
+    - generic-helm-chart
+    - application-helm-chart
+    - kubernetes
+    - helm
+    - gitops
+    - argocd
+    - gateway-api
+    - prometheus
+    - service-monitor
+    - observability
+    maintainers:
+    - email: v.lochashvili@protonmail.com
+      name: Vyacheslav Lochashvili
+    name: application
+    sources:
+    - https://github.com/chaser100/u-helm-chart
+    type: application
+    urls:
+    - https://chaser100.github.io/u-helm-chart/application-0.3.8.tgz
+    version: 0.3.8
+  - annotations:
+      artifacthub.io/displayName: Universal Helm Chart
+      artifacthub.io/license: MIT
+    apiVersion: v2
+    appVersion: 0.1.6
+    created: "2026-08-28T14:57:06.812790218+03:00"
     description: Universal Helm chart for deploying applications to Kubernetes
     digest: 16720797523f8f9b8a1d925f1d1bc70c9513bcf9b24f79a0425aa331f151ab1c
     home: https://helm.networkcat89.com
@@ -36,7 +69,7 @@ entries:
     version: 0.3.7
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.766709892+03:00"
+    created: "2026-08-28T14:57:06.811708327+03:00"
     description: Universal Helm chart for deploying applications to Kubernetes
     digest: f7d8f03f35d7a83df39231c25c1ba4ea76f67549d9d06bc7dfb10b6d5cb455a9
     home: https://helm.networkcat89.com
@@ -65,7 +98,7 @@ entries:
     version: 0.3.6
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.765913323+03:00"
+    created: "2026-08-28T14:57:06.810730863+03:00"
     description: Universal Helm chart for deploying applications to Kubernetes
     digest: f76fc84a82382de403f33b375860687e94021a954c8174e66a5202283233afbb
     keywords:
@@ -88,7 +121,7 @@ entries:
     version: 0.3.5
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.765158874+03:00"
+    created: "2026-08-28T14:57:06.809868666+03:00"
     description: A Helm chart for Kubernetes
     digest: c64808d1b80040e85098967d4326d1849a2432a9fb9e26bea66f82ea0d438bde
     keywords:
@@ -103,7 +136,7 @@ entries:
     version: 0.3.4
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.764410641+03:00"
+    created: "2026-08-28T14:57:06.808986627+03:00"
     description: A Helm chart for Kubernetes
     digest: 74060fbdaf983f0dcbd68da34d4b88f95ccaca995356df3b285627b4fb1d2a0b
     keywords:
@@ -118,7 +151,7 @@ entries:
     version: 0.3.3
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.763670024+03:00"
+    created: "2026-08-28T14:57:06.807986593+03:00"
     description: A Helm chart for Kubernetes
     digest: a2579e5d9358c2b2f2aa3aa4eb7900da551217d3c4878383796dc9417d1056d8
     keywords:
@@ -133,7 +166,7 @@ entries:
     version: 0.3.2
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.762930572+03:00"
+    created: "2026-08-28T14:57:06.807072815+03:00"
     description: A Helm chart for Kubernetes
     digest: 41303ac01e94fc6c861094544b17637145622fbeb67e284ff38ac30d643d0556
     keywords:
@@ -148,7 +181,7 @@ entries:
     version: 0.3.1
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.76214807+03:00"
+    created: "2026-08-28T14:57:06.80596889+03:00"
     description: A Helm chart for Kubernetes
     digest: 595463f818e82b19b7fb31dc8fdbc9af6291bd8275a20cf900f9455e38f47ce6
     keywords:
@@ -163,7 +196,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.761723894+03:00"
+    created: "2026-08-28T14:57:06.805356101+03:00"
     description: A Helm chart for Kubernetes
     digest: 9c58e9b99e0fbcc6fef91ab10be39fd63196fbe36fb2434e87d615318ec58e5a
     keywords:
@@ -178,7 +211,7 @@ entries:
     version: 0.2.9
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.76123173+03:00"
+    created: "2026-08-28T14:57:06.804560679+03:00"
     description: A Helm chart for Kubernetes
     digest: a38580d384d42c769c7cff413e02a7d2e92b5eaff389f970e1faf24258c5f650
     keywords:
@@ -193,7 +226,7 @@ entries:
     version: 0.2.8
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.760596999+03:00"
+    created: "2026-08-28T14:57:06.803787738+03:00"
     description: A Helm chart for Kubernetes
     digest: b005cc629bf65aa82c73472f5730863ef54823007f8faf17e97902312feb0ddf
     keywords:
@@ -208,7 +241,7 @@ entries:
     version: 0.2.7
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.760177503+03:00"
+    created: "2026-08-28T14:57:06.803320461+03:00"
     description: A Helm chart for Kubernetes
     digest: 06c0353f868a3c0c2c2aa70cd4270850fcb03e58c991fa231bbacc17c1b27155
     keywords:
@@ -223,7 +256,7 @@ entries:
     version: 0.2.6
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.759765241+03:00"
+    created: "2026-08-28T14:57:06.802671881+03:00"
     description: A Helm chart for Kubernetes
     digest: b9598d0932a253047f55840646420c833a9f299082483f74c16ad557add82ada
     keywords:
@@ -238,7 +271,7 @@ entries:
     version: 0.2.5
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.759338515+03:00"
+    created: "2026-08-28T14:57:06.801946726+03:00"
     description: A Helm chart for Kubernetes
     digest: aebcd525d611d894661d29308736f34f8cc660f4e133b35512458135993f1ea5
     keywords:
@@ -253,7 +286,7 @@ entries:
     version: 0.2.4
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.758938418+03:00"
+    created: "2026-08-28T14:57:06.801177849+03:00"
     description: A Helm chart for Kubernetes
     digest: 86910d958d7302e9544b5449079aeab61f4f8b7e6b9aa151b54c4109e68ced0e
     keywords:
@@ -268,7 +301,7 @@ entries:
     version: 0.2.3
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.758499723+03:00"
+    created: "2026-08-28T14:57:06.800471688+03:00"
     description: A Helm chart for Kubernetes
     digest: 8fec432996882bce3e2babca20eaf6b5be76f29239b3018f08a858925d4328b5
     keywords:
@@ -283,7 +316,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.75805785+03:00"
+    created: "2026-08-28T14:57:06.79980189+03:00"
     description: A Helm chart for Kubernetes
     digest: 073a3a316f30482f6a2be455b7eebbda89ddb9d80ba250c22298d1d79fb88bf4
     keywords:
@@ -298,7 +331,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.757182196+03:00"
+    created: "2026-08-28T14:57:06.799100032+03:00"
     description: A Helm chart for Kubernetes
     digest: f22d5abcad54ec14c8b719237a6f9946a8087dadb9b1db385ecad106a1ff6704
     keywords:
@@ -313,7 +346,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.756660822+03:00"
+    created: "2026-08-28T14:57:06.798211076+03:00"
     description: A Helm chart for Kubernetes
     digest: a65428a0856d0e372cab234eff9acf53e2a7ce617e898adfcf11b890ed126d6b
     keywords:
@@ -328,7 +361,7 @@ entries:
     version: 0.2.0-beta
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.7563053+03:00"
+    created: "2026-08-28T14:57:06.797357239+03:00"
     description: A Helm chart for Kubernetes
     digest: 85c7ff81108e08a9fcfe8d4f05a9f2b0cdb8f5591d63be5ce0f61237e5cb8cfe
     keywords:
@@ -343,7 +376,7 @@ entries:
     version: 0.1.9
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.755933597+03:00"
+    created: "2026-08-28T14:57:06.796961219+03:00"
     description: A Helm chart for Kubernetes
     digest: 972c53c77b397c1f5601c145c1194dacdb3e3fb8e05fe3717d9e9fe7d3f8b2e1
     keywords:
@@ -358,7 +391,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.755570647+03:00"
+    created: "2026-08-28T14:57:06.79658228+03:00"
     description: A Helm chart for Kubernetes
     digest: d2deae55e095fc9fb28b46439e4288993d19d28a47b7c97389f001b3a666d85e
     keywords:
@@ -373,7 +406,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 0.1.6
-    created: "2026-07-23T19:11:43.755200488+03:00"
+    created: "2026-08-28T14:57:06.79612488+03:00"
     description: A Helm chart for Kubernetes
     digest: 2089f13907ae154cda72f0935f2323615d2d0cb34a85d2279179371030d9d854
     keywords:
@@ -388,7 +421,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 0.1.5
-    created: "2026-07-23T19:11:43.754801005+03:00"
+    created: "2026-08-28T14:57:06.795616014+03:00"
     description: A Helm chart for Kubernetes
     digest: f27476b84da57394a30c277e65ffa6c72bb1c6d157efb22e210438a3f3d28adf
     keywords:
@@ -403,7 +436,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-07-23T19:11:43.754444109+03:00"
+    created: "2026-08-28T14:57:06.794950982+03:00"
     description: A Helm chart for Kubernetes
     digest: 1c4013e12a3c3131aa74fce245f38103974d5edc99fcf5f86f01679c6c7de55a
     keywords:
@@ -416,4 +449,4 @@ entries:
     urls:
     - https://chaser100.github.io/u-helm-chart/application-0.1.0.tgz
     version: 0.1.0
-generated: "2026-07-23T19:11:43.753934399+03:00"
+generated: "2026-08-28T14:57:06.794370931+03:00"

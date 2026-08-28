@@ -25,7 +25,7 @@ keywords:
 
 type: application
 
-version: 0.3.7
+version: 0.3.8
 
 annotations:
   artifacthub.io/displayName: Universal Helm Chart

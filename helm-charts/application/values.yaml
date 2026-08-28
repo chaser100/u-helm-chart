@@ -32,6 +32,12 @@ serviceAccount:
 deploymentAnnotations: {}
 #  prometheus.io/scrape: "true"
 
+deploymentStrategy: {}
+# type: RollingUpdate
+# rollingUpdate:
+#   maxUnavailable: 0
+#   maxSurge: 1
+
 podAnnotations: {}
 
 podLabels: {}

@@ -1,0 +1,13 @@
+# Test with a custom Deployment rolling update strategy
+image: nginx
+imageTag: 1.21
+
+deploymentStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 1
+
+service:
+  type: ClusterIP
+  port: 80

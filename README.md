@@ -17,7 +17,7 @@ A reusable, production-ready universal Helm chart for deploying applications to 
 
 Universal Helm Chart is a generic Helm chart and reusable application Helm chart for Kubernetes. Deploy different containerized applications with one configurable chart instead of maintaining a separate chart for every service.
 
-It supports Deployments, Services, Ingress, Gateway API HTTPRoutes, Prometheus Operator ServiceMonitors, Jobs, CronJobs, autoscaling, ConfigMaps, Secrets, persistent volumes, init containers, sidecars, custom Kubernetes manifests, and more.
+It supports Deployments with configurable rollout strategies, Services, Ingress, Gateway API HTTPRoutes, Prometheus Operator ServiceMonitors, Jobs, CronJobs, autoscaling, ConfigMaps, Secrets, persistent volumes, init containers, sidecars, custom Kubernetes manifests, and more.
 
 ## Quick Start
 
@@ -50,6 +50,7 @@ See [Why This Chart?](docs/why-this-chart.md) for design goals, trade-offs, and 
 The [`tests/` directory](helm-charts/application/tests/) contains tested, ready-to-use `values.yaml` examples and is the source of truth for supported configurations. Every example is linted and rendered in CI.
 
 - [Basic application](helm-charts/application/tests/values-test-basic.yaml)
+- [Deployment strategy](helm-charts/application/tests/values-test-deployment-strategy.yaml)
 - [Ingress](helm-charts/application/tests/values-test-ingress.yaml) and [plain Ingress](helm-charts/application/tests/values-test-ingress-plain.yaml)
 - [Gateway API HTTPRoute](helm-charts/application/tests/values-test-route.yaml)
 - [Prometheus Operator ServiceMonitor](helm-charts/application/tests/values-test-servicemonitor.yaml)
@@ -63,6 +64,7 @@ See all tested configurations in [`helm-charts/application/tests/`](helm-charts/
 
 - [Why this chart?](docs/why-this-chart.md)
 - [Configuration reference](docs/configuration.md)
+- [Deployment strategy](docs/configuration.md#deployment-strategy)
 - [Ingress](docs/configuration.md#ingress)
 - [Gateway API](docs/configuration.md#gateway-api-route)
 - [Jobs](docs/configuration.md#job)
@@ -74,7 +76,7 @@ See all tested configurations in [`helm-charts/application/tests/`](helm-charts/
 
 ## Features
 
-- **Flexible deployments** - Configure replicas, commands, probes, resources, lifecycle hooks, and scheduling
+- **Flexible deployments** - Configure replicas, rollout strategies, commands, probes, resources, lifecycle hooks, and scheduling
 - **Ingress and Gateway API** - Support standard Ingress, extra Ingress, plain Ingress, and Gateway API HTTPRoute
 - **Prometheus monitoring** - Optionally create a Prometheus Operator ServiceMonitor for the chart-managed Service
 - **Jobs and CronJobs** - Run one-time and scheduled workloads with dedicated configuration
