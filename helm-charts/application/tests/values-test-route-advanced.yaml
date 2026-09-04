@@ -1,0 +1,45 @@
+# Test advanced Gateway API HTTPRoute configuration
+image: nginx
+imageTag: 1.27
+fullnameOverride: advanced-route-app
+service:
+  type: ClusterIP
+  port: 8080
+route:
+  enabled: true
+  name: advanced-route
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: app.example.com
+  spec:
+    parentRefs:
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        name: external
+        namespace: gateway-system
+        sectionName: https
+    hostnames:
+      - app.example.com
+    rules:
+      - matches:
+          - path:
+              type: Exact
+              value: /health
+          - path:
+              type: PathPrefix
+              value: /api
+            headers:
+              - type: Exact
+                name: X-Environment
+                value: production
+        filters:
+          - type: RequestHeaderModifier
+            requestHeaderModifier:
+              set:
+                - name: X-Forwarded-Application
+                  value: advanced-route-app
+        backendRefs:
+          - group: ""
+            kind: Service
+            name: advanced-route-app
+            port: 8080
+            weight: 1

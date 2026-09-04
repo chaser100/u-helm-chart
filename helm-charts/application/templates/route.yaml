@@ -12,6 +12,10 @@ metadata:
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+{{- with .Values.route.spec }}
+spec:
+  {{- toYaml . | nindent 2 }}
+{{- else }}
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
@@ -40,4 +44,5 @@ spec:
           name: {{ include "application.fullname" . }}
           port: {{ .Values.service.port }}
           weight: {{ default 1 .Values.route.backendWeight }}
+{{- end }}
 {{- end }}
