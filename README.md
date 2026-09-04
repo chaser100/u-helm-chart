@@ -52,7 +52,7 @@ The [`tests/` directory](helm-charts/application/tests/) contains tested, ready-
 - [Basic application](helm-charts/application/tests/values-test-basic.yaml)
 - [Deployment strategy](helm-charts/application/tests/values-test-deployment-strategy.yaml)
 - [Ingress](helm-charts/application/tests/values-test-ingress.yaml) and [plain Ingress](helm-charts/application/tests/values-test-ingress-plain.yaml)
-- [Gateway API HTTPRoute](helm-charts/application/tests/values-test-route.yaml)
+- [Gateway API HTTPRoute](helm-charts/application/tests/values-test-route.yaml) and [advanced HTTPRoute](helm-charts/application/tests/values-test-route-advanced.yaml)
 - [Prometheus Operator ServiceMonitor](helm-charts/application/tests/values-test-servicemonitor.yaml)
 - [Jobs](helm-charts/application/tests/values-test-job.yaml) and [CronJobs](helm-charts/application/tests/values-test-cronjob.yaml)
 - [Storage and full configuration](helm-charts/application/tests/values-test-full.yaml)
@@ -77,7 +77,7 @@ See all tested configurations in [`helm-charts/application/tests/`](helm-charts/
 ## Features
 
 - **Flexible deployments** - Configure replicas, rollout strategies, commands, probes, resources, lifecycle hooks, and scheduling
-- **Ingress and Gateway API** - Support standard Ingress, extra Ingress, plain Ingress, and Gateway API HTTPRoute
+- **Ingress and Gateway API** - Support standard Ingress, extra Ingress, plain Ingress, and simple or fully configurable Gateway API HTTPRoutes
 - **Prometheus monitoring** - Optionally create a Prometheus Operator ServiceMonitor for the chart-managed Service
 - **Jobs and CronJobs** - Run one-time and scheduled workloads with dedicated configuration
 - **Autoscaling** - Scale Deployments with `autoscaling/v2` HorizontalPodAutoscaler resources

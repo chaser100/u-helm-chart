@@ -92,7 +92,9 @@ ingress:
 
 route:
   enabled: false
-  # route.gateway is required when enabled=true
+  # route.gateway is required in simple mode when enabled=true.
+  # Set spec to a complete HTTPRoute spec for advanced Gateway API configuration.
+  spec: {}
   name: ""
   annotations: {}
   labels: {}

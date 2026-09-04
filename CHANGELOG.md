@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.9] - 2026-09-04
+
+### Added
+- Advanced Gateway API configuration through `route.spec`, with support for the complete `HTTPRoute.spec` structure
+- Tested HTTPRoute example with multiple path matches, header matching, and a request header modifier filter
+
+### Changed
+- Preserved the existing simple HTTPRoute fields as the default configuration path while allowing `route.spec` to replace the generated spec when needed
+
 ## [0.3.8] - 2026-08-28
 
 ### Added
@@ -186,6 +195,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[0.3.9]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.9
 [0.3.8]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.8
 [0.3.7]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.7
 [0.3.6]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.6

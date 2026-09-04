@@ -272,6 +272,12 @@
           "type": "boolean",
           "default": false
         },
+        "spec": {
+          "description": "Complete HTTPRoute spec for advanced configuration. When non-empty, it replaces the spec generated from the simple route fields.",
+          "type": "object",
+          "additionalProperties": true,
+          "default": {}
+        },
         "name": {
           "type": "string",
           "default": ""
@@ -287,7 +293,7 @@
           "default": {}
         },
         "gateway": {
-          "description": "Parent Gateway name. Required when the route is enabled.",
+          "description": "Parent Gateway name. Required in simple mode when the route is enabled and route.spec is empty.",
           "type": "string",
           "default": ""
         },

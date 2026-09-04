@@ -87,6 +87,8 @@ Use `type: Recreate` for workloads that cannot run old and new Pods at the same 
 
 ### Gateway API HTTPRoute
 
+Use the simple fields for a single path routed to the chart-managed Service:
+
 ```yaml
 service:
   port: 8080
@@ -98,6 +100,39 @@ route:
   hostname: app.example.com
   path: /
 ```
+
+For multiple matches, filters, traffic splitting, or other Gateway API options, set a complete `HTTPRoute.spec` under `route.spec`:
+
+```yaml
+fullnameOverride: my-app
+
+service:
+  port: 8080
+
+route:
+  enabled: true
+  name: my-app
+  spec:
+    parentRefs:
+      - name: public-gateway
+        namespace: gateway-system
+        sectionName: https
+    hostnames:
+      - app.example.com
+    rules:
+      - matches:
+          - path:
+              type: Exact
+              value: /health
+          - path:
+              type: PathPrefix
+              value: /api
+        backendRefs:
+          - name: my-app
+            port: 8080
+```
+
+When `route.spec` is non-empty, it replaces the spec generated from `route.gateway`, `route.hostname`, `route.path`, and the other simple route fields. HTTPRoute metadata still comes from `route.name`, `route.labels`, and `route.annotations`.
 
 ### Horizontal Autoscaling
 
@@ -182,7 +217,7 @@ serviceMonitor:
 - [Deployment strategy](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-deployment-strategy.yaml)
 - [Ingress](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-ingress.yaml)
 - [Plain Ingress](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-ingress-plain.yaml)
-- [Gateway API HTTPRoute](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-route.yaml)
+- [Gateway API HTTPRoute](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-route.yaml) and [advanced HTTPRoute](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-route-advanced.yaml)
 - [Autoscaling](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-autoscaling.yaml)
 - [Jobs](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-job.yaml) and [CronJobs](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-cronjob.yaml)
 - [Persistent storage and full configuration](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-full.yaml)

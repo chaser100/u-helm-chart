@@ -206,11 +206,12 @@ An additional ingress resource with the same structure as the main ingress.
 
 ## Gateway API Route
 
-Creates a `gateway.networking.k8s.io/v1` `HTTPRoute` resource and automatically routes traffic to the Service created by this chart (`{{ include "application.fullname" . }}` on `service.port`).
+Creates a `gateway.networking.k8s.io/v1` `HTTPRoute`. The simple configuration routes one path to the Service created by this chart (`{{ include "application.fullname" . }}` on `service.port`). For multiple matches, filters, traffic splitting, custom backends, and other Gateway API options, provide the complete `HTTPRoute.spec` through `route.spec`.
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `route.enabled` | Enable HTTPRoute creation | `false` |
+| `route.spec` | Complete advanced `HTTPRoute.spec`; replaces the generated simple spec when non-empty | `{}` |
 | `route.name` | HTTPRoute name (uses chart fullname if empty) | `""` |
 | `route.labels` | Additional HTTPRoute labels | `{}` |
 | `route.annotations` | HTTPRoute annotations | `{}` |
@@ -224,10 +225,10 @@ Creates a `gateway.networking.k8s.io/v1` `HTTPRoute` resource and automatically 
 | `route.timeouts.request` | Maximum end-to-end request duration (Gateway API Duration) | not set |
 | `route.timeouts.backendRequest` | Maximum gateway-to-backend request duration (Gateway API Duration) | not set |
 
-`route.gateway` is required when `route.enabled: true`.
+`route.gateway` is required when `route.enabled: true` and `route.spec` is empty.
 `route` template is rendered only when deployment (and chart service) is enabled (`deploymentDisable: false`).
 
-### Example
+### Simple Example
 
 ```yaml
 route:
@@ -243,6 +244,46 @@ route:
     request: 75s
     backendRequest: 75s
 ```
+
+### Advanced Example
+
+Set `route.spec` to use the complete Gateway API structure. This example exposes two paths through one rule, matching the production-style case that previously required `extraManifests`:
+
+```yaml
+fullnameOverride: clustersentinel
+
+service:
+  port: 8080
+
+route:
+  enabled: true
+  name: clustersentinel
+  spec:
+    parentRefs:
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        name: external
+        namespace: kgateway-system
+        sectionName: https-wildcard
+    hostnames:
+      - clustersentinel.example.com
+    rules:
+      - matches:
+          - path:
+              type: Exact
+              value: /health
+          - path:
+              type: PathPrefix
+              value: /mcp
+        backendRefs:
+          - group: ""
+            kind: Service
+            name: clustersentinel
+            port: 8080
+            weight: 1
+```
+
+When `route.spec` is non-empty, the chart renders it unchanged instead of generating a spec from the simple route fields. HTTPRoute metadata remains configurable through `route.name`, `route.labels`, and `route.annotations`. See the [advanced tested example](../helm-charts/application/tests/values-test-route-advanced.yaml).
 
 ## Plain Ingress
 
