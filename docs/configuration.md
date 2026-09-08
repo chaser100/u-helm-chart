@@ -314,6 +314,7 @@ Each item in `ingressPlain.items` supports:
     - `service` - Service configuration (optional):
       - `type` - Service type (`ClusterIP`, `NodePort`, `LoadBalancer`)
       - `port`, `targetPort`, `portName`, `protocol` - Service port configuration
+      - `appProtocol` - Optional application protocol hint for the Service port, such as `grpc` or `kubernetes.io/h2c`
       - `selector` - Pod selector labels
       - `annotations`, `labels` - Service metadata
 
@@ -343,6 +344,7 @@ ingressPlain:
                   app: users
                 port: 8080
                 targetPort: 8080
+                appProtocol: grpc
             - path: /orders
               backend:
                 service:

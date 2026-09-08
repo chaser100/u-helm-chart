@@ -84,3 +84,12 @@ jobs:
               exit 1
             fi
           done
+
+          ingress_plain_services="$(helm template test "$CHART_PATH" \
+            --values "$CHART_PATH/tests/values-test-ingress-plain.yaml" \
+            --show-only templates/ingress-plain-services.yaml)"
+
+          if ! grep -Fq "appProtocol: grpc" <<<"$ingress_plain_services"; then
+            echo "Plain Ingress Service output is missing appProtocol" >&2
+            exit 1
+          fi

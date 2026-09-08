@@ -66,6 +66,7 @@ See all tested configurations in [`helm-charts/application/tests/`](helm-charts/
 - [Configuration reference](docs/configuration.md)
 - [Deployment strategy](docs/configuration.md#deployment-strategy)
 - [Ingress](docs/configuration.md#ingress)
+- [Plain Ingress](docs/configuration.md#plain-ingress)
 - [Gateway API](docs/configuration.md#gateway-api-route)
 - [Jobs](docs/configuration.md#job)
 - [CronJobs](docs/configuration.md#cronjob)
@@ -77,7 +78,7 @@ See all tested configurations in [`helm-charts/application/tests/`](helm-charts/
 ## Features
 
 - **Flexible deployments** - Configure replicas, rollout strategies, commands, probes, resources, lifecycle hooks, and scheduling
-- **Ingress and Gateway API** - Support standard Ingress, extra Ingress, plain Ingress, and simple or fully configurable Gateway API HTTPRoutes
+- **Ingress and Gateway API** - Support standard Ingress, extra Ingress, plain Ingress with optional Service `appProtocol` hints, and simple or fully configurable Gateway API HTTPRoutes
 - **Prometheus monitoring** - Optionally create a Prometheus Operator ServiceMonitor for the chart-managed Service
 - **Jobs and CronJobs** - Run one-time and scheduled workloads with dedicated configuration
 - **Autoscaling** - Scale Deployments with `autoscaling/v2` HorizontalPodAutoscaler resources
