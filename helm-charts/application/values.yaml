@@ -480,6 +480,7 @@ ingressPlain:
 #                selector:
 #                  app: users
 #                port: 8080
+#                appProtocol: grpc
 #
 #            - path: /orders
 #              backend:

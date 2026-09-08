@@ -28,6 +28,7 @@ ingressPlain:
                   app: users
                 port: 8080
                 targetPort: 8080
+                appProtocol: grpc
             - path: /orders
               backend:
                 service:
