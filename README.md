@@ -50,6 +50,7 @@ See [Why This Chart?](docs/why-this-chart.md) for design goals, trade-offs, and 
 The [`tests/` directory](helm-charts/application/tests/) contains tested, ready-to-use `values.yaml` examples and is the source of truth for supported configurations. Every example is linted and rendered in CI.
 
 - [Basic application](helm-charts/application/tests/values-test-basic.yaml)
+- [Service application protocol](helm-charts/application/tests/values-test-service-app-protocol.yaml)
 - [Deployment strategy](helm-charts/application/tests/values-test-deployment-strategy.yaml)
 - [Ingress](helm-charts/application/tests/values-test-ingress.yaml) and [plain Ingress](helm-charts/application/tests/values-test-ingress-plain.yaml)
 - [Gateway API HTTPRoute](helm-charts/application/tests/values-test-route.yaml) and [advanced HTTPRoute](helm-charts/application/tests/values-test-route-advanced.yaml)
