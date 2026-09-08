@@ -93,3 +93,20 @@ jobs:
             echo "Plain Ingress Service output is missing appProtocol" >&2
             exit 1
           fi
+
+          main_service="$(helm template test "$CHART_PATH" \
+            --values "$CHART_PATH/tests/values-test-service-app-protocol.yaml" \
+            --show-only templates/7_service.yaml)"
+
+          if ! grep -Fq "appProtocol: grpc" <<<"$main_service"; then
+            echo "Chart-managed Service output is missing appProtocol" >&2
+            exit 1
+          fi
+
+          default_service="$(helm template test "$CHART_PATH" \
+            --show-only templates/7_service.yaml)"
+
+          if grep -Fq "appProtocol:" <<<"$default_service"; then
+            echo "Chart-managed Service must omit appProtocol by default" >&2
+            exit 1
+          fi

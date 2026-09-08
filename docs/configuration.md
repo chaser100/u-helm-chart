@@ -109,6 +109,7 @@ securityContext:
 | `service.type` | Type of service (ClusterIP, NodePort, LoadBalancer) | `ClusterIP` |
 | `service.port` | Service port | `80` |
 | `service.protocol` | Service protocol | `TCP` |
+| `service.appProtocol` | Optional application protocol hint for the Service port | `""` |
 
 ### Example
 
@@ -118,6 +119,7 @@ service:
   type: LoadBalancer
   port: 8080
   protocol: TCP
+  appProtocol: grpc
 ```
 
 ## ServiceMonitor

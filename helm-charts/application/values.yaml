@@ -60,6 +60,7 @@ service:
   name: http
   type: ClusterIP
   port: 80
+  appProtocol: ""
   protocol: TCP
 
 serviceMonitor:

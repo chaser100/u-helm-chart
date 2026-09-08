@@ -1,0 +1,9 @@
+# Test chart-managed Service application protocol
+image: nginx
+imageTag: 1.27
+service:
+  name: http
+  type: ClusterIP
+  port: 9005
+  targetPort: http
+  appProtocol: grpc

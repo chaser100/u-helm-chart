@@ -202,6 +202,11 @@
             "SCTP"
           ],
           "default": "TCP"
+        },
+        "appProtocol": {
+          "description": "Optional application protocol hint for the chart-managed Service port.",
+          "type": "string",
+          "default": ""
         }
       }
     },
