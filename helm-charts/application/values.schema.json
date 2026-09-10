@@ -590,6 +590,18 @@
       "type": "object",
       "additionalProperties": true
     },
+    "externalSecretHooks": {
+      "description": "Legacy automatic Helm hook configuration for ExternalSecret resources in extraManifests.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "description": "Add pre-install and pre-upgrade Helm hook annotations to every ExternalSecret in extraManifests.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
     "extraManifests": {
       "description": "Additional raw Kubernetes manifests.",
       "type": "array",

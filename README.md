@@ -55,6 +55,7 @@ The [`tests/` directory](helm-charts/application/tests/) contains tested, ready-
 - [Ingress](helm-charts/application/tests/values-test-ingress.yaml) and [plain Ingress](helm-charts/application/tests/values-test-ingress-plain.yaml)
 - [Gateway API HTTPRoute](helm-charts/application/tests/values-test-route.yaml) and [advanced HTTPRoute](helm-charts/application/tests/values-test-route-advanced.yaml)
 - [Prometheus Operator ServiceMonitor](helm-charts/application/tests/values-test-servicemonitor.yaml)
+- [ExternalSecret lifecycle](helm-charts/application/tests/values-test-extra-manifests.yaml) and [opt-in Helm hooks](helm-charts/application/tests/values-test-external-secret-hooks.yaml)
 - [Jobs](helm-charts/application/tests/values-test-job.yaml) and [CronJobs](helm-charts/application/tests/values-test-cronjob.yaml)
 - [Storage and full configuration](helm-charts/application/tests/values-test-full.yaml)
 - [Sidecars](helm-charts/application/tests/values-test-sidecar.yaml)
@@ -74,6 +75,7 @@ See all tested configurations in [`helm-charts/application/tests/`](helm-charts/
 - [Persistent storage](docs/configuration.md#persistentvolumeclaims)
 - [Sidecars](docs/configuration.md#sidecar-containers)
 - [Init containers](docs/configuration.md#init-containers)
+- [ExternalSecret and extra manifests](docs/configuration.md#extra-manifests)
 - [Extra deployments](docs/configuration.md#extra-deployments)
 
 ## Features
@@ -86,7 +88,7 @@ See all tested configurations in [`helm-charts/application/tests/`](helm-charts/
 - **Security configuration** - Configure security contexts, service accounts, and Pod Security Standards-compatible settings
 - **Storage** - Mount ConfigMaps, Secrets, arbitrary volumes, and PersistentVolumeClaims
 - **Init and sidecar containers** - Run supporting containers alongside the main application
-- **Custom resources** - Add raw Kubernetes manifests and extra Deployments when needed
+- **Custom resources** - Add raw Kubernetes manifests, control ExternalSecret lifecycle annotations, and define extra Deployments when needed
 - **GitOps workflows** - Use the same chart with Helm, Argo CD, Flux, and other deployment tools
 
 ## Requirements

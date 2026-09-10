@@ -1,6 +1,6 @@
 {{- range .Values.extraManifests }}
 {{- $isExternalSecret := eq (default "" .kind) "ExternalSecret" }}
-{{- if $isExternalSecret }}
+{{- if and $isExternalSecret $.Values.externalSecretHooks.enabled }}
 {{- if not .metadata }}
 {{- $_ := set . "metadata" dict }}
 {{- end }}

@@ -11,6 +11,8 @@ extraManifests:
     metadata:
       name: example-external-secret
       namespace: default
+      annotations:
+        argocd.argoproj.io/sync-wave: "-5"
     spec:
       refreshInterval: 10s
       secretStoreRef:
