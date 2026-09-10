@@ -138,3 +138,49 @@ jobs:
               exit 1
             fi
           done
+
+          multi_port_deployment="$(helm template test "$CHART_PATH" \
+            --values "$CHART_PATH/tests/values-test-multi-port.yaml" \
+            --show-only templates/5_deployment.yaml)"
+
+          for deployment_value in \
+            "revisionHistoryLimit: 2" \
+            "- --config=/etc/application/config.yaml" \
+            "containerPort: 8080" \
+            "containerPort: 8081"; do
+            if ! grep -Fq -- "$deployment_value" <<<"$multi_port_deployment"; then
+              echo "Multi-port Deployment output is missing: $deployment_value" >&2
+              exit 1
+            fi
+          done
+
+          multi_port_service="$(helm template test "$CHART_PATH" \
+            --values "$CHART_PATH/tests/values-test-multi-port.yaml" \
+            --show-only templates/7_service.yaml)"
+
+          if [[ "$(grep -c '^      port:' <<<"$multi_port_service")" -ne 2 ]]; then
+            echo "Multi-port Service must contain exactly two ports" >&2
+            exit 1
+          fi
+
+          legacy_udp_service="$(helm template test "$CHART_PATH" \
+            --set service.protocol=UDP \
+            --show-only templates/7_service.yaml)"
+
+          if ! grep -Fq "protocol: UDP" <<<"$legacy_udp_service"; then
+            echo "Legacy Service output does not honor service.protocol" >&2
+            exit 1
+          fi
+
+          service_disabled="$(helm template test "$CHART_PATH" \
+            --values "$CHART_PATH/tests/values-test-service-disabled.yaml")"
+
+          if ! grep -q '^kind: Deployment$' <<<"$service_disabled"; then
+            echo "Deployment must render when service.enabled=false" >&2
+            exit 1
+          fi
+
+          if grep -q '^kind: Service$' <<<"$service_disabled"; then
+            echo "Service must not render when service.enabled=false" >&2
+            exit 1
+          fi

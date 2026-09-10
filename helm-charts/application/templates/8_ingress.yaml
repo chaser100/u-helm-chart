@@ -40,7 +40,7 @@ spec:
               service:
                 name: {{ include "application.fullname" $ }}
                 port:
-                  number: {{ $.Values.service.port }}
+                  number: {{ include "application.servicePort" $ }}
           {{- end }}
     {{- end }}
 {{- end }}

@@ -85,6 +85,33 @@ deploymentStrategy:
 
 Use `type: Recreate` for workloads that cannot run old and new Pods at the same time.
 
+### Main Container Arguments and Multiple Ports
+
+```yaml
+args:
+  - --config=/etc/application/config.yaml
+
+revisionHistoryLimit: 2
+
+containerPorts:
+  - name: metrics
+    containerPort: 8080
+  - name: health
+    containerPort: 8081
+
+service:
+  enabled: true
+  ports:
+    - name: metrics
+      port: 8080
+      targetPort: metrics
+    - name: health
+      port: 8081
+      targetPort: health
+```
+
+Set `service.enabled: false` for workloads that do not need a chart-managed Service. Legacy single-port `service.name`, `service.port`, `service.targetPort`, `service.protocol`, and `service.appProtocol` values remain supported.
+
 ### Gateway API HTTPRoute
 
 Use the simple fields for a single path routed to the chart-managed Service:
@@ -269,6 +296,8 @@ serviceMonitor:
 ## Tested Configurations
 
 - [Basic application](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-basic.yaml)
+- [Container arguments and multiple ports](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-multi-port.yaml)
+- [Deployment without Service](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-service-disabled.yaml)
 - [Deployment strategy](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-deployment-strategy.yaml)
 - [Ingress](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-ingress.yaml)
 - [Plain Ingress](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-ingress-plain.yaml)

@@ -60,6 +60,28 @@
       },
       "default": []
     },
+    "args": {
+      "description": "Arguments passed to the main container command.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "revisionHistoryLimit": {
+      "description": "Number of old ReplicaSets retained for the Deployment.",
+      "type": "integer",
+      "minimum": 0,
+      "default": 10
+    },
+    "containerPorts": {
+      "description": "Main container port definitions. When non-empty, replaces the legacy port derived from service values.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/containerPort"
+      },
+      "default": []
+    },
     "nameOverride": {
       "description": "Override the application name.",
       "type": "string",
@@ -165,6 +187,11 @@
       "type": "object",
       "additionalProperties": true,
       "properties": {
+        "enabled": {
+          "description": "Create the chart-managed Service.",
+          "type": "boolean",
+          "default": true
+        },
         "name": {
           "description": "Service port name.",
           "type": "string",
@@ -207,6 +234,14 @@
           "description": "Optional application protocol hint for the chart-managed Service port.",
           "type": "string",
           "default": ""
+        },
+        "ports": {
+          "description": "Service port definitions. When non-empty, replaces the legacy single-port fields.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/servicePort"
+          },
+          "default": []
         }
       }
     },
@@ -674,6 +709,80 @@
     }
   },
   "definitions": {
+    "containerPort": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "containerPort"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "containerPort": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "protocol": {
+          "type": "string",
+          "enum": [
+            "TCP",
+            "UDP",
+            "SCTP"
+          ],
+          "default": "TCP"
+        },
+        "hostIP": {
+          "type": "string"
+        },
+        "hostPort": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        }
+      }
+    },
+    "servicePort": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "port"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "targetPort": {
+          "$ref": "#/definitions/port"
+        },
+        "protocol": {
+          "type": "string",
+          "enum": [
+            "TCP",
+            "UDP",
+            "SCTP"
+          ],
+          "default": "TCP"
+        },
+        "appProtocol": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nodePort": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        }
+      }
+    },
     "intOrPercentage": {
       "oneOf": [
         {

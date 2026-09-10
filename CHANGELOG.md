@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.3] - 2026-09-10
+
+### Added
+- Main container `args` and configurable Deployment `revisionHistoryLimit`
+- Multiple main container ports through `containerPorts` and multiple Service ports through `service.ports`
+- Optional chart-managed Service creation through `service.enabled`
+- Tested multi-port and Service-disabled deployment examples
+
+### Fixed
+- Chart-managed Service now renders the configured legacy `service.protocol` instead of always using `TCP`
+
+### Changed
+- Built-in Ingress, simple HTTPRoute, and chart notes use the first `service.ports` entry when multiple ports are configured
+
 ## [0.4.2] - 2026-09-10
 
 ### Added
@@ -223,6 +237,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[0.4.3]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.4.3
 [0.4.2]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.4.2
 [0.4.1]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.4.1
 [0.4.0]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.4.0
