@@ -1032,9 +1032,12 @@ Inject raw Kubernetes manifests for advanced use cases (e.g., ExternalSecrets, c
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `extraManifests` | List of Kubernetes manifest objects | `{}` |
+| `extraManifests` | List of Kubernetes manifest objects | `[]` |
+| `externalSecretHooks.enabled` | Add legacy Helm hook annotations to every ExternalSecret in `extraManifests` | `false` |
 
-**Important:** Resources of kind `ExternalSecret` are automatically configured with Helm pre-install/pre-upgrade hooks to ensure they are created before the deployment. This prevents `ConfigContainerError` when the deployment tries to use secrets that haven't been created yet.
+`ExternalSecret` objects are rendered as ordinary resources by default. The chart does not add Helm hooks or deployment-order annotations automatically.
+
+For Argo CD deployments that require ordering, add a sync wave directly to the manifest metadata:
 
 ### Example
 
@@ -1045,6 +1048,8 @@ extraManifests:
     metadata:
       name: example-external-secret
       namespace: default
+      annotations:
+        argocd.argoproj.io/sync-wave: "-5"
     spec:
       refreshInterval: 10s
       secretStoreRef:
@@ -1065,10 +1070,14 @@ extraManifests:
             property: BAR
 ```
 
-**Note:** For `ExternalSecret` resources, the chart automatically adds the following Helm hook annotations:
-- `helm.sh/hook: pre-install,pre-upgrade` - Ensures creation before deployment
-- `helm.sh/hook-weight: "-5"` - Sets execution order (negative weight means earlier execution)
-- `helm.sh/hook-delete-policy: before-hook-creation` - Cleans up old resources before creating new ones
+To retain the legacy behavior, explicitly enable automatic hooks:
+
+```yaml
+externalSecretHooks:
+  enabled: true
+```
+
+This adds `helm.sh/hook: pre-install,pre-upgrade`, `helm.sh/hook-weight: "-5"`, and `helm.sh/hook-delete-policy: before-hook-creation` to every `ExternalSecret` in `extraManifests`. Alternatively, define any required Helm hook annotations directly under each manifest's `metadata.annotations`.
 
 ## Extra Deployments
 

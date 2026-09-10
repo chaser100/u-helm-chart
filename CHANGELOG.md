@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] - 2026-09-10
+
+### Added
+- Opt-in `externalSecretHooks.enabled` setting for legacy automatic Helm hooks on ExternalSecret resources
+- Tested examples for ordinary ExternalSecrets with an Argo CD sync wave and explicitly enabled Helm hooks
+
+### Changed
+- ExternalSecret resources in `extraManifests` no longer receive Helm hook annotations by default
+- Updated documentation to recommend explicit lifecycle and ordering annotations
+
 ## [0.4.1] - 2026-09-08
 
 ### Added
@@ -213,6 +223,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[0.4.2]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.4.2
 [0.4.1]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.4.1
 [0.4.0]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.4.0
 [0.3.9]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.3.9

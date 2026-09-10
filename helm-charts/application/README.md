@@ -169,6 +169,26 @@ ingressPlain:
 
 The chart omits `appProtocol` when it is not configured for either Service type.
 
+### ExternalSecret Lifecycle
+
+`ExternalSecret` objects in `extraManifests` are ordinary resources by default. The chart does not add Helm hooks automatically.
+
+For Argo CD ordering, add a sync wave directly to the manifest:
+
+```yaml
+extraManifests:
+  - apiVersion: external-secrets.io/v1beta1
+    kind: ExternalSecret
+    metadata:
+      name: app-secrets
+      annotations:
+        argocd.argoproj.io/sync-wave: "-5"
+    spec:
+      # ExternalSecret spec
+```
+
+Set `externalSecretHooks.enabled: true` only when the legacy automatic Helm pre-install/pre-upgrade hook behavior is required.
+
 ### Horizontal Autoscaling
 
 ```yaml
@@ -258,6 +278,7 @@ serviceMonitor:
 - [Persistent storage and full configuration](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-full.yaml)
 - [Sidecars](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-sidecar.yaml)
 - [ServiceMonitor](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-servicemonitor.yaml)
+- [ExternalSecret lifecycle](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-extra-manifests.yaml) and [opt-in Helm hooks](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-external-secret-hooks.yaml)
 - [Extra Deployments](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-extra-deployments.yaml)
 - [Custom manifests](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-extra-manifests.yaml)
 

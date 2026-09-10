@@ -398,12 +398,18 @@ envSecrets:
       secretName: example-external-secret
       secretKey: BAR
 
+externalSecretHooks:
+  # Opt in to the legacy automatic Helm hooks for ExternalSecret resources in extraManifests.
+  enabled: false
+
 extraManifests: []
 #  - apiVersion: external-secrets.io/v1beta1
 #    kind: ExternalSecret
 #    metadata:
 #      name: example-external-secret
 #      namespace: example
+#      annotations:
+#        argocd.argoproj.io/sync-wave: "-5"
 #    spec:
 #      refreshInterval: 10s
 #      secretStoreRef:

@@ -110,3 +110,31 @@ jobs:
             echo "Chart-managed Service must omit appProtocol by default" >&2
             exit 1
           fi
+
+          extra_manifests="$(helm template test "$CHART_PATH" \
+            --values "$CHART_PATH/tests/values-test-extra-manifests.yaml" \
+            --show-only templates/1_extra-manifests.yaml)"
+
+          if ! grep -Fq 'argocd.argoproj.io/sync-wave: "-5"' <<<"$extra_manifests"; then
+            echo "ExternalSecret output is missing the user-defined Argo CD sync wave" >&2
+            exit 1
+          fi
+
+          if grep -Fq "helm.sh/hook" <<<"$extra_manifests"; then
+            echo "ExternalSecret must not receive Helm hooks by default" >&2
+            exit 1
+          fi
+
+          hooked_external_secret="$(helm template test "$CHART_PATH" \
+            --values "$CHART_PATH/tests/values-test-external-secret-hooks.yaml" \
+            --show-only templates/1_extra-manifests.yaml)"
+
+          for hook_annotation in \
+            "helm.sh/hook: pre-install,pre-upgrade" \
+            'helm.sh/hook-weight: "-5"' \
+            "helm.sh/hook-delete-policy: before-hook-creation"; do
+            if ! grep -Fq "$hook_annotation" <<<"$hooked_external_secret"; then
+              echo "Opt-in ExternalSecret hook output is missing: $hook_annotation" >&2
+              exit 1
+            fi
+          done
