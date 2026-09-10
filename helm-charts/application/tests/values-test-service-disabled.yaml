@@ -1,0 +1,7 @@
+# Test Deployment without a chart-managed Service
+image: nginx
+imageTag: 1.27
+args:
+  - --worker
+service:
+  enabled: false

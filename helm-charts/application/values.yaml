@@ -16,6 +16,16 @@ command: []
 #  - "-c"
 #  - "echo hello"
 
+args: []
+# Arguments passed to the main container command
+
+revisionHistoryLimit: 10
+
+containerPorts: []
+#  - name: http
+#    containerPort: 8080
+#    protocol: TCP
+
 imagePullSecrets: []
 #  - name: imagepullsecret1
 #  - name: imagepullsecret2
@@ -57,11 +67,17 @@ securityContext: {}
 #   runAsUser: 1000
 
 service:
+  enabled: true
   name: http
   type: ClusterIP
   port: 80
   appProtocol: ""
   protocol: TCP
+  ports: []
+#    - name: http
+#      port: 80
+#      targetPort: http
+#      protocol: TCP
 
 serviceMonitor:
   enabled: false

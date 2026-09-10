@@ -11,6 +11,9 @@ The following table lists the configurable parameters and their default values. 
 | `imageTag` | Container image tag | `latest` |
 | `imagePullPolicy` | Image pull policy | `Always` |
 | `imagePullSecrets` | List of image pull secrets for private registries | `[]` |
+| `args` | Arguments passed to the main container command | `[]` |
+| `containerPorts` | Main container port definitions | `[]` |
+| `revisionHistoryLimit` | Number of old ReplicaSets retained by the Deployment | `10` |
 | `nameOverride` | Override the name of the chart | `""` |
 | `fullnameOverride` | Override the full name of the chart | `""` |
 | `deploymentAnnotations` | Additional annotations for the deployment | `{}` |
@@ -25,6 +28,13 @@ replicaCount: 3
 image: myregistry/myapp
 imageTag: v1.2.3
 imagePullPolicy: IfNotPresent
+args:
+  - --config=/etc/application/config.yaml
+revisionHistoryLimit: 2
+containerPorts:
+  - name: http
+    containerPort: 8080
+    protocol: TCP
 imagePullSecrets:
   - name: regcred
 ```
@@ -105,21 +115,51 @@ securityContext:
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `service.enabled` | Create the chart-managed Service | `true` |
 | `service.name` | Name of the service port | `http` |
 | `service.type` | Type of service (ClusterIP, NodePort, LoadBalancer) | `ClusterIP` |
 | `service.port` | Service port | `80` |
 | `service.protocol` | Service protocol | `TCP` |
 | `service.appProtocol` | Optional application protocol hint for the Service port | `""` |
+| `service.ports` | Multiple Service port definitions | `[]` |
 
 ### Example
 
 ```yaml
 service:
+  enabled: true
   name: http
   type: LoadBalancer
   port: 8080
   protocol: TCP
   appProtocol: grpc
+```
+
+When `service.ports` is empty, the chart uses the legacy `service.name`, `service.port`, `service.targetPort`, `service.protocol`, and `service.appProtocol` fields. A non-empty `service.ports` list replaces that single generated Service port. Built-in Ingress and simple HTTPRoute configurations target the first entry in `service.ports`.
+
+When `containerPorts` is empty and `service.enabled: true`, the Deployment keeps the legacy container port derived from the single Service fields. A non-empty `containerPorts` list replaces it. When `service.enabled: false`, the chart omits the Service; define `containerPorts` separately if the Pod should declare ports.
+
+Built-in Ingress resources and the simple HTTPRoute configuration require the chart-managed Service. Disable them with `service.enabled: false`, or use raw manifests and advanced `route.spec` with an independently managed Service.
+
+### Multiple Ports Example
+
+```yaml
+containerPorts:
+  - name: metrics
+    containerPort: 8080
+  - name: health
+    containerPort: 8081
+
+service:
+  ports:
+    - name: metrics
+      port: 8080
+      targetPort: metrics
+      protocol: TCP
+    - name: health
+      port: 8081
+      targetPort: health
+      protocol: TCP
 ```
 
 ## ServiceMonitor

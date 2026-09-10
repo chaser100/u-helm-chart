@@ -42,7 +42,7 @@ spec:
         - group: ""
           kind: Service
           name: {{ include "application.fullname" . }}
-          port: {{ .Values.service.port }}
+          port: {{ include "application.servicePort" . }}
           weight: {{ default 1 .Values.route.backendWeight }}
 {{- end }}
 {{- end }}

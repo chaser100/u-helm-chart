@@ -35,3 +35,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "application.servicePort" -}}
+{{- if .Values.service.ports }}
+{{- (index .Values.service.ports 0).port }}
+{{- else }}
+{{- .Values.service.port }}
+{{- end }}
+{{- end }}
