@@ -184,3 +184,45 @@ jobs:
             echo "Service must not render when service.enabled=false" >&2
             exit 1
           fi
+
+          existing_service_account="$(helm template test "$CHART_PATH" \
+            --values "$CHART_PATH/tests/values-test-service-account-disabled.yaml")"
+
+          if grep -q '^kind: ServiceAccount$' <<<"$existing_service_account"; then
+            echo "ServiceAccount must not render when serviceAccount.create=false" >&2
+            exit 1
+          fi
+
+          if ! grep -Fq "serviceAccountName: existing-service-account" <<<"$existing_service_account"; then
+            echo "Deployment does not reference the configured existing ServiceAccount" >&2
+            exit 1
+          fi
+
+          default_service_account="$(helm template test "$CHART_PATH" \
+            --set serviceAccount.create=false)"
+
+          if grep -q '^kind: ServiceAccount$' <<<"$default_service_account"; then
+            echo "Default ServiceAccount must not render when serviceAccount.create=false" >&2
+            exit 1
+          fi
+
+          if ! grep -Fq "serviceAccountName: default" <<<"$default_service_account"; then
+            echo "Deployment does not reference the namespace default ServiceAccount" >&2
+            exit 1
+          fi
+
+          extra_ingress="$(helm template test "$CHART_PATH" \
+            --values "$CHART_PATH/tests/values-test-ingress-extra.yaml" \
+            --show-only templates/9_ingress-extra.yaml)"
+
+          for ingress_value in \
+            "name: test-extra" \
+            "ingressClassName: nginx-internal" \
+            'host: "admin.example.com"' \
+            "secretName: admin-example-tls" \
+            "number: 8080"; do
+            if ! grep -Fq "$ingress_value" <<<"$extra_ingress"; then
+              echo "Extra Ingress output is missing: $ingress_value" >&2
+              exit 1
+            fi
+          done

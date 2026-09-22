@@ -13,6 +13,8 @@
 
 ⭐ **Examples:** https://helm.networkcat89.com/examples
 
+🤖 **MCP for AI agents:** https://helm.networkcat89.com/docs/connect-agent/
+
 A reusable, production-ready universal Helm chart for deploying applications to Kubernetes.
 
 Universal Helm Chart is a generic Helm chart and reusable application Helm chart for Kubernetes. Deploy different containerized applications with one configurable chart instead of maintaining a separate chart for every service.
@@ -31,6 +33,55 @@ helm upgrade --install my-app universal/application \
   --set image=nginx \
   --set imageTag=1.27
 ```
+
+## Connect an AI Agent with MCP
+
+The project provides a hosted MCP knowledge service for AI-assisted chart configuration. It does not install anything into your Kubernetes cluster. The chart source of truth remains [chaser100/u-helm-chart](https://github.com/chaser100/u-helm-chart).
+
+Server details:
+
+- Endpoint: `https://helm.networkcat89.com/mcp`
+- Transport: MCP Streamable HTTP
+- Protocol version: `2025-06-18`
+- Server name: `helm-networkcat89`
+- Authentication: anonymous read access; write tools require an operator-provided Bearer token
+
+Cursor and compatible MCP clients can use:
+
+```json
+{
+  "mcpServers": {
+    "helm-networkcat89": {
+      "url": "https://helm.networkcat89.com/mcp"
+    }
+  }
+}
+```
+
+Check index freshness and list the available tools:
+
+```bash
+curl -sS https://helm.networkcat89.com/healthz
+
+curl -sS https://helm.networkcat89.com/mcp \
+  -H 'Content-Type: application/json' \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
+```
+
+Anonymous read tools include:
+
+- `search_docs` for chart documentation
+- `get_values_schema` and `explain_value` for values configuration
+- `list_examples` and `get_example` for published examples
+- `get_checklist` for the production checklist
+- `list_shapes` and `get_shape` for workload shapes
+- `resolve_resource` for `helm://...` resources
+
+MCP resources are available through `resources/list` and `resources/read`. Authenticated write tools include `propose_improvement` and `open_feature_branch_pr`, which create GitHub issues or `mcp/**` pull requests.
+
+Discovery metadata is published at [`/llms.txt`](https://helm.networkcat89.com/llms.txt). Non-MCP clients can use the OpenAPI read interface described by [`/openapi.json`](https://helm.networkcat89.com/openapi.json); its `operationId` values match the MCP tool names.
+
+See [Connect an agent](https://helm.networkcat89.com/docs/connect-agent/) for the handshake example and setup instructions for Cursor, Claude, and generic HTTP MCP clients.
 
 ## Why Use This Chart?
 
@@ -53,8 +104,9 @@ The [`tests/` directory](helm-charts/application/tests/) contains tested, ready-
 - [Service application protocol](helm-charts/application/tests/values-test-service-app-protocol.yaml)
 - [Container arguments and multiple ports](helm-charts/application/tests/values-test-multi-port.yaml)
 - [Deployment without Service](helm-charts/application/tests/values-test-service-disabled.yaml)
+- [Deployment with an existing ServiceAccount](helm-charts/application/tests/values-test-service-account-disabled.yaml)
 - [Deployment strategy](helm-charts/application/tests/values-test-deployment-strategy.yaml)
-- [Ingress](helm-charts/application/tests/values-test-ingress.yaml) and [plain Ingress](helm-charts/application/tests/values-test-ingress-plain.yaml)
+- [Ingress](helm-charts/application/tests/values-test-ingress.yaml), [plain Ingress](helm-charts/application/tests/values-test-ingress-plain.yaml), and [extra Ingress](helm-charts/application/tests/values-test-ingress-extra.yaml)
 - [Gateway API HTTPRoute](helm-charts/application/tests/values-test-route.yaml) and [advanced HTTPRoute](helm-charts/application/tests/values-test-route-advanced.yaml)
 - [Prometheus Operator ServiceMonitor](helm-charts/application/tests/values-test-servicemonitor.yaml)
 - [ExternalSecret lifecycle](helm-charts/application/tests/values-test-extra-manifests.yaml) and [opt-in Helm hooks](helm-charts/application/tests/values-test-external-secret-hooks.yaml)
@@ -68,6 +120,7 @@ See all tested configurations in [`helm-charts/application/tests/`](helm-charts/
 
 - [Why this chart?](docs/why-this-chart.md)
 - [Configuration reference](docs/configuration.md)
+- [Connect an AI agent via MCP](https://helm.networkcat89.com/docs/connect-agent/)
 - [Deployment strategy](docs/configuration.md#deployment-strategy)
 - [Ingress](docs/configuration.md#ingress)
 - [Plain Ingress](docs/configuration.md#plain-ingress)

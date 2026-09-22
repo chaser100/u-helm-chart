@@ -1,0 +1,28 @@
+# Test additional Ingress for the chart-managed Service
+replicaCount: 2
+image: nginx
+imageTag: 1.27
+service:
+  enabled: true
+  type: ClusterIP
+  port: 8080
+extra:
+  ingress:
+    enabled: true
+    className: nginx-internal
+    labels:
+      exposure: internal
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/rewrite-target: /
+    hosts:
+      - host: admin.example.com
+        paths:
+          - path: /
+            pathType: Prefix
+          - path: /health
+            pathType: Exact
+    tls:
+      - secretName: admin-example-tls
+        hosts:
+          - admin.example.com
