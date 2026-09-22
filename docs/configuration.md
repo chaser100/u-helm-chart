@@ -69,7 +69,7 @@ Do not set `rollingUpdate` when `type: Recreate`.
 | `serviceAccount.create` | Whether to create a service account | `true` |
 | `serviceAccount.automount` | Automatically mount the service account token | `true` |
 | `serviceAccount.annotations` | Additional annotations for the service account | `{}` |
-| `serviceAccount.name` | Name of the service account (if not set, uses fullname) | `""` |
+| `serviceAccount.name` | ServiceAccount name; defaults to the chart fullname when created and `default` when using an existing account | `""` |
 | `job.serviceAccountAnnotations` | Extra ServiceAccount annotations applied when `job.enabled=true` (merged with `serviceAccount.annotations`) | `{}` |
 
 ### Example
@@ -82,6 +82,16 @@ serviceAccount:
     eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/my-role
   name: my-service-account
 ```
+
+To use an existing ServiceAccount without creating one:
+
+```yaml
+serviceAccount:
+  create: false
+  name: existing-service-account
+```
+
+If `name` is empty, the workload uses the namespace `default` ServiceAccount without managing it.
 
 ## Security Context
 

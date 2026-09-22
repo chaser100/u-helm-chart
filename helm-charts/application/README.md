@@ -69,6 +69,55 @@ helm upgrade --install my-app universal/application \
   -f values.yaml
 ```
 
+## Connect an AI Agent with MCP
+
+The project provides a hosted MCP knowledge service for AI-assisted chart configuration. It does not install anything into your Kubernetes cluster. The chart source of truth remains [chaser100/u-helm-chart](https://github.com/chaser100/u-helm-chart).
+
+Server details:
+
+- Endpoint: `https://helm.networkcat89.com/mcp`
+- Transport: MCP Streamable HTTP
+- Protocol version: `2025-06-18`
+- Server name: `helm-networkcat89`
+- Authentication: anonymous read access; write tools require an operator-provided Bearer token
+
+Cursor and compatible MCP clients can use:
+
+```json
+{
+  "mcpServers": {
+    "helm-networkcat89": {
+      "url": "https://helm.networkcat89.com/mcp"
+    }
+  }
+}
+```
+
+Check index freshness and list the available tools:
+
+```bash
+curl -sS https://helm.networkcat89.com/healthz
+
+curl -sS https://helm.networkcat89.com/mcp \
+  -H 'Content-Type: application/json' \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
+```
+
+Anonymous read tools include:
+
+- `search_docs` for chart documentation
+- `get_values_schema` and `explain_value` for values configuration
+- `list_examples` and `get_example` for published examples
+- `get_checklist` for the production checklist
+- `list_shapes` and `get_shape` for workload shapes
+- `resolve_resource` for `helm://...` resources
+
+MCP resources are available through `resources/list` and `resources/read`. Authenticated write tools include `propose_improvement` and `open_feature_branch_pr`, which create GitHub issues or `mcp/**` pull requests.
+
+Discovery metadata is published at [`/llms.txt`](https://helm.networkcat89.com/llms.txt). Non-MCP clients can use the OpenAPI read interface described by [`/openapi.json`](https://helm.networkcat89.com/openapi.json); its `operationId` values match the MCP tool names.
+
+See [Connect an agent](https://helm.networkcat89.com/docs/connect-agent/) for the handshake example and setup instructions for Cursor, Claude, and generic HTTP MCP clients.
+
 ## Common Use Cases
 
 ### Deployment Strategy
@@ -111,6 +160,18 @@ service:
 ```
 
 Set `service.enabled: false` for workloads that do not need a chart-managed Service. Legacy single-port `service.name`, `service.port`, `service.targetPort`, `service.protocol`, and `service.appProtocol` values remain supported.
+
+### Existing Service Account
+
+Disable ServiceAccount creation and reference an account managed outside this chart:
+
+```yaml
+serviceAccount:
+  create: false
+  name: existing-service-account
+```
+
+When `name` is empty, the workload uses the namespace `default` ServiceAccount without attempting to manage it.
 
 ### Gateway API HTTPRoute
 
@@ -298,9 +359,11 @@ serviceMonitor:
 - [Basic application](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-basic.yaml)
 - [Container arguments and multiple ports](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-multi-port.yaml)
 - [Deployment without Service](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-service-disabled.yaml)
+- [Deployment with an existing ServiceAccount](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-service-account-disabled.yaml)
 - [Deployment strategy](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-deployment-strategy.yaml)
 - [Ingress](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-ingress.yaml)
 - [Plain Ingress](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-ingress-plain.yaml)
+- [Extra Ingress](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-ingress-extra.yaml)
 - [Gateway API HTTPRoute](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-route.yaml) and [advanced HTTPRoute](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-route-advanced.yaml)
 - [Autoscaling](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-autoscaling.yaml)
 - [Jobs](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-job.yaml) and [CronJobs](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-cronjob.yaml)
@@ -314,6 +377,7 @@ serviceMonitor:
 ## Documentation
 
 - [Configuration reference](https://helm.networkcat89.com/docs)
+- [Connect an AI agent via MCP](https://helm.networkcat89.com/docs/connect-agent/)
 - [Tested examples](https://helm.networkcat89.com/examples)
 - [Interactive playground](https://helm.networkcat89.com/playground)
 - [Source repository](https://github.com/chaser100/u-helm-chart)

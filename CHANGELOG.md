@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.4] - 2026-09-22
+
+### Added
+- README instructions for connecting AI agents to the hosted Universal Helm Chart MCP knowledge service
+
+### Fixed
+- `serviceAccount.create=false` now prevents ServiceAccount creation instead of rendering and attempting to manage the namespace `default` ServiceAccount
+
 ## [0.4.3] - 2026-09-10
 
 ### Added
@@ -237,6 +245,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[0.4.4]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.4.4
 [0.4.3]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.4.3
 [0.4.2]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.4.2
 [0.4.1]: https://github.com/chaser100/u-helm-chart/releases/tag/v0.4.1
