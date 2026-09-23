@@ -198,16 +198,41 @@ jobs:
             exit 1
           fi
 
-          default_service_account="$(helm template test "$CHART_PATH" \
-            --set serviceAccount.create=false)"
+          implicit_default_service_account="$(helm template test "$CHART_PATH" \
+            --values "$CHART_PATH/tests/values-test-service-account-implicit-default.yaml")"
 
-          if grep -q '^kind: ServiceAccount$' <<<"$default_service_account"; then
+          if grep -q '^kind: ServiceAccount$' <<<"$implicit_default_service_account"; then
             echo "Default ServiceAccount must not render when serviceAccount.create=false" >&2
             exit 1
           fi
 
-          if ! grep -Fq "serviceAccountName: default" <<<"$default_service_account"; then
-            echo "Deployment does not reference the namespace default ServiceAccount" >&2
+          if grep -q '^[[:space:]]*serviceAccountName:' <<<"$implicit_default_service_account"; then
+            echo "Deployment must omit serviceAccountName when no existing account is configured" >&2
+            exit 1
+          fi
+
+          job_without_service_account="$(helm template test "$CHART_PATH" \
+            --values "$CHART_PATH/tests/values-test-job.yaml" \
+            --set deploymentDisable=true \
+            --set serviceAccount.create=false \
+            --set-string serviceAccount.name= \
+            --set-string job.serviceAccountName= \
+            --show-only templates/3_job.yaml)"
+
+          if grep -q '^[[:space:]]*serviceAccountName:' <<<"$job_without_service_account"; then
+            echo "Job must omit serviceAccountName when no existing account is configured" >&2
+            exit 1
+          fi
+
+          cronjob_without_service_account="$(helm template test "$CHART_PATH" \
+            --values "$CHART_PATH/tests/values-test-cronjob.yaml" \
+            --set deploymentDisable=true \
+            --set serviceAccount.create=false \
+            --set-string serviceAccount.name= \
+            --show-only templates/11_cronjob.yaml)"
+
+          if grep -q '^[[:space:]]*serviceAccountName:' <<<"$cronjob_without_service_account"; then
+            echo "CronJob must omit serviceAccountName when no existing account is configured" >&2
             exit 1
           fi
 

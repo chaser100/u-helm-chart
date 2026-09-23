@@ -171,7 +171,7 @@ serviceAccount:
   name: existing-service-account
 ```
 
-When `name` is empty, the workload uses the namespace `default` ServiceAccount without attempting to manage it.
+When `name` is empty, the chart omits `serviceAccountName` from the Pod spec. Kubernetes then assigns the namespace `default` ServiceAccount.
 
 ### Gateway API HTTPRoute
 
@@ -360,6 +360,7 @@ serviceMonitor:
 - [Container arguments and multiple ports](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-multi-port.yaml)
 - [Deployment without Service](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-service-disabled.yaml)
 - [Deployment with an existing ServiceAccount](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-service-account-disabled.yaml)
+- [Deployment with the implicit namespace default ServiceAccount](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-service-account-implicit-default.yaml)
 - [Deployment strategy](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-deployment-strategy.yaml)
 - [Ingress](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-ingress.yaml)
 - [Plain Ingress](https://github.com/chaser100/u-helm-chart/blob/main/helm-charts/application/tests/values-test-ingress-plain.yaml)

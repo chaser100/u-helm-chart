@@ -41,7 +41,10 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ .Values.job.serviceAccountName | default (include "application.serviceAccountName" .) }}
+      {{- $serviceAccountName := .Values.job.serviceAccountName | default (include "application.serviceAccountName" .) }}
+      {{- with $serviceAccountName }}
+      serviceAccountName: {{ . }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:

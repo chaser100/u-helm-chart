@@ -111,6 +111,7 @@
           "default": {}
         },
         "name": {
+          "description": "ServiceAccount name. When creation is disabled and this value is empty, serviceAccountName is omitted from workload Pod specs.",
           "type": "string",
           "default": ""
         }

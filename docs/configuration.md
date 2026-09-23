@@ -69,7 +69,7 @@ Do not set `rollingUpdate` when `type: Recreate`.
 | `serviceAccount.create` | Whether to create a service account | `true` |
 | `serviceAccount.automount` | Automatically mount the service account token | `true` |
 | `serviceAccount.annotations` | Additional annotations for the service account | `{}` |
-| `serviceAccount.name` | ServiceAccount name; defaults to the chart fullname when created and `default` when using an existing account | `""` |
+| `serviceAccount.name` | ServiceAccount name; defaults to the chart fullname when created and is omitted when creation is disabled | `""` |
 | `job.serviceAccountAnnotations` | Extra ServiceAccount annotations applied when `job.enabled=true` (merged with `serviceAccount.annotations`) | `{}` |
 
 ### Example
@@ -91,7 +91,7 @@ serviceAccount:
   name: existing-service-account
 ```
 
-If `name` is empty, the workload uses the namespace `default` ServiceAccount without managing it.
+If `name` is empty, the chart omits `serviceAccountName` from the Pod spec. Kubernetes then assigns the namespace `default` ServiceAccount.
 
 ## Security Context
 
