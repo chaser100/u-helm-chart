@@ -105,6 +105,7 @@ The [`tests/` directory](helm-charts/application/tests/) contains tested, ready-
 - [Container arguments and multiple ports](helm-charts/application/tests/values-test-multi-port.yaml)
 - [Deployment without Service](helm-charts/application/tests/values-test-service-disabled.yaml)
 - [Deployment with an existing ServiceAccount](helm-charts/application/tests/values-test-service-account-disabled.yaml)
+- [Deployment with the implicit namespace default ServiceAccount](helm-charts/application/tests/values-test-service-account-implicit-default.yaml)
 - [Deployment strategy](helm-charts/application/tests/values-test-deployment-strategy.yaml)
 - [Ingress](helm-charts/application/tests/values-test-ingress.yaml), [plain Ingress](helm-charts/application/tests/values-test-ingress-plain.yaml), and [extra Ingress](helm-charts/application/tests/values-test-ingress-extra.yaml)
 - [Gateway API HTTPRoute](helm-charts/application/tests/values-test-route.yaml) and [advanced HTTPRoute](helm-charts/application/tests/values-test-route-advanced.yaml)
